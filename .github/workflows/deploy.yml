@@ -1,0 +1,49 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Instalacja
+        run: npm ci
+        working-directory: web
+
+      - name: Build
+        run: npm run build
+        working-directory: web
+
+      - name: Wysyłka FTP na Hostingera
+        env:
+          FTP_SERWER: ${{ secrets.FTP_SERWER }}
+          FTP_USER: ${{ secrets.FTP_USER }}
+          FTP_HASLO: ${{ secrets.FTP_HASLO }}
+        run: |
+          test -f web/out/index.html || { echo "Brak web/out/index.html"; exit 1; }
+          sudo apt-get update -qq && sudo apt-get install -y -qq lftp
+          # Główne konto FTP Hostingera ma w katalogu głównym folder "domains".
+          # Osobne konto dla ypemedia.com startuje od razu w public_html.
+          ROOT=$(lftp -u "$FTP_USER","$FTP_HASLO" "$FTP_SERWER" -e "set ftp:ssl-allow no; cls -1 /; bye")
+          if echo "$ROOT" | grep -qxE '/?domains/?'; then
+            TARGET=/domains/ypemedia.com/public_html/
+          else
+            TARGET=/
+          fi
+          echo "Cel na serwerze: $TARGET"
+          lftp -u "$FTP_USER","$FTP_HASLO" "$FTP_SERWER" -e "set ftp:ssl-allow no; mirror -R --delete --verbose --exclude-glob .well-known/ web/out/ $TARGET; bye"
