@@ -33,17 +33,24 @@ jobs:
         env:
           FTP_SERWER: ${{ secrets.FTP_SERWER }}
           FTP_USER: ${{ secrets.FTP_USER }}
-          FTP_HASLO: ${{ secrets.FTP_HASLO }}
+          LFTP_PASSWORD: ${{ secrets.FTP_HASLO }}
         run: |
           test -f web/out/index.html || { echo "Brak web/out/index.html"; exit 1; }
+          HOST=$(printf '%s' "$FTP_SERWER" | tr -d '[:space:]' | sed -E 's#^(s?ftps?://)##; s#/.*$##')
+          USR=$(printf '%s' "$FTP_USER" | tr -d '[:space:]')
+          [ -n "$HOST" ] || { echo "Pusty sekret FTP_SERWER"; exit 1; }
+          [ -n "$USR" ] || { echo "Pusty sekret FTP_USER"; exit 1; }
+          [ -n "$LFTP_PASSWORD" ] || { echo "Pusty sekret FTP_HASLO"; exit 1; }
           sudo apt-get update -qq && sudo apt-get install -y -qq lftp
           # Główne konto FTP Hostingera ma w katalogu głównym folder "domains".
           # Osobne konto dla ypemedia.com startuje od razu w public_html.
-          ROOT=$(lftp -u "$FTP_USER","$FTP_HASLO" "$FTP_SERWER" -e "set ftp:ssl-allow no; cls -1 /; bye")
-          if echo "$ROOT" | grep -qxE '/?domains/?'; then
+          ROOT=$(lftp -u "$USR" --env-password "$HOST" -e "set ftp:ssl-allow no; set net:max-retries 2; cls -1 /; bye")
+          echo "$ROOT"
+          [ -n "$ROOT" ] || { echo "Nie udało się odczytać katalogu na serwerze"; exit 1; }
+          if echo "$ROOT" | grep -qxE '/?(domains|public_html)/?'; then
             TARGET=/domains/ypemedia.com/public_html/
           else
             TARGET=/
           fi
           echo "Cel na serwerze: $TARGET"
-          lftp -u "$FTP_USER","$FTP_HASLO" "$FTP_SERWER" -e "set ftp:ssl-allow no; mirror -R --delete --verbose --exclude-glob .well-known/ web/out/ $TARGET; bye"
+          lftp -u "$USR" --env-password "$HOST" -e "set ftp:ssl-allow no; set net:max-retries 2; mirror -R --delete --verbose --exclude-glob .well-known/ web/out/ $TARGET; bye"
