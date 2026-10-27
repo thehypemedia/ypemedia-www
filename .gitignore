@@ -1,0 +1,15 @@
+# zależności i build
+node_modules/
+web/node_modules/
+web/.next/
+web/out/
+.next/
+out/
+
+# lokalne ustawienia
+.env
+.env.*
+web/.env
+web/.env.*
+.DS_Store
+*.log
