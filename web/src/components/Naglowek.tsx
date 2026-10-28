@@ -12,7 +12,7 @@ export default function Naglowek() {
       <div className="studio-descriptor">
         {naglowek.deskryptor.join(" ")}
       </div>
-      <div className="availability"><span aria-hidden="true" />{naglowek.status}</div>
+      <a className="availability top-cta" href="/editor/"><span aria-hidden="true" />FREE POST EDITOR <b>TRY IT ↗</b></a>
     </div>
   );
 }
