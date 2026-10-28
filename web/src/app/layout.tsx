@@ -27,7 +27,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link rel="preload" as="font" type="font/ttf" crossOrigin="" href="/fonts/InstrumentSerif-Regular.ttf" />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "c79176b3686f4c7bb32ab7d432279fa0"}'></script>
+      </body>
     </html>
   );
 }
