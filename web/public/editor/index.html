@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Free Ad Editor · YPE Media</title>
+<meta name="description" content="Make scroll-stopping ads for Instagram, Facebook, TikTok, X and YouTube Shorts. Swap the photo, edit the copy, add your logo, or generate an ad background with AI.">
+<link rel="icon" href="/icon-v1.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" crossorigin="anonymous" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Instrument+Serif:ital@0;1&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.js"></script>
+
+<style>
+:root{--paper:#f5f1e9;--ink:#542f28;--muted:#8e766a;--accent:#e17145;--line:#dcd3c6;--panel:#fbf8f2}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);font-size:13px}
+button{font:inherit;color:inherit;cursor:pointer}
+a{color:inherit}
+.app{display:grid;grid-template-columns:250px 1fr 330px;grid-template-rows:64px 52px 1fr;height:100vh}
+header{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;padding:0 24px;border-bottom:1px solid var(--line)}
+.wordmark{font-size:26px;letter-spacing:-1.4px;text-decoration:none}.wordmark b{font-weight:400;color:var(--accent)}
+.wordmark small{font-family:'Instrument Serif',serif;font-style:italic;font-size:20px;letter-spacing:0;color:var(--muted);margin-left:10px}
+.hdr-right{display:flex;gap:14px;align-items:center}
+.plan{font-size:10px;letter-spacing:1.3px;text-transform:uppercase;color:var(--muted)}
+.plan.pro{color:var(--accent)}
+.lang{display:flex;border:1px solid var(--line);border-radius:30px;overflow:hidden}.lang button{border:0;background:none;padding:5px 10px;font-size:11px;letter-spacing:.6px;color:var(--muted)}.lang button.on{background:var(--ink);color:var(--paper)}
+.btn{border:1px solid var(--ink);background:transparent;border-radius:40px;padding:10px 20px;font-weight:500;transition:transform .15s,background .15s,opacity .15s}
+.btn:hover{transform:translateY(-1px)}
+.btn:disabled{opacity:.45;transform:none;cursor:default}
+.btn.solid{background:var(--ink);color:var(--paper)}
+.btn.solid:hover{background:#3f221c}
+.btn.small{padding:7px 14px;font-size:12px}
+/* format bar */
+.formats{grid-column:2;display:flex;gap:6px;align-items:center;padding:0 16px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+.formats::-webkit-scrollbar{display:none}
+.fmt{flex-shrink:0;border:1px solid var(--line);background:#fff;border-radius:30px;padding:6px 12px;font-size:12px;display:flex;gap:6px;align-items:center;white-space:nowrap}
+.fmt small{color:var(--muted);font-size:10px}
+.fmt.on{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+.fmt.on small{color:#d9c8bd}
+.fmt:hover:not(.on){border-color:var(--accent)}
+.safe-toggle{margin-left:auto;flex-shrink:0;display:flex;gap:6px;align-items:center;font-size:12px;color:var(--muted);padding-left:10px}
+/* left */
+.left{grid-row:2/4;border-right:1px solid var(--line);overflow:auto;padding:18px 16px}
+.tabs{display:flex;gap:18px;margin-bottom:16px;border-bottom:1px solid var(--line)}
+.tabs button{background:none;border:0;padding:8px 0;font-size:12px;letter-spacing:.4px;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px}
+.tabs button.on{color:var(--ink);border-color:var(--accent)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.thumb{position:relative;background:#e8e0d4;border:0;padding:0;overflow:hidden;border-radius:6px;outline:2px solid transparent;outline-offset:2px}
+.thumb.on{outline-color:var(--accent)}
+.thumb .mini{position:absolute;left:0;top:0;transform-origin:0 0;pointer-events:none}
+.thumb .lbl{position:absolute;left:0;right:0;bottom:0;padding:16px 7px 6px;font-size:10px;text-align:left;color:#fff;background:linear-gradient(transparent,rgba(30,18,14,.75))}
+.thumb .lock{position:absolute;inset:0;background:rgba(245,241,233,.55);backdrop-filter:blur(1.5px);display:flex;align-items:center;justify-content:center}
+.thumb .lock span{background:var(--ink);color:var(--paper);font-size:10px;padding:5px 10px;border-radius:30px;letter-spacing:.5px}
+.freeinfo{font-family:'Instrument Serif',serif;font-size:20px;line-height:1.1;margin:22px 0 8px}
+.freeinfo em{color:#a17c63}
+.left p{color:var(--muted);line-height:1.5;margin:0 0 12px}
+/* stage */
+.stage{grid-column:2;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 1px 1px,#e2d8ca 1px,transparent 0) 0 0/18px 18px}
+#holder{position:relative;box-shadow:0 30px 60px -30px rgba(60,30,20,.35)}
+#holder .slide{position:absolute;left:0;top:0;transform-origin:0 0;overflow:hidden}
+.slide > *{position:absolute;margin:0;box-sizing:border-box}
+.slide i{font-style:italic}
+.slide [data-t]{outline:none;cursor:text}
+.slide [data-t]:hover{box-shadow:0 0 0 3px rgba(225,113,69,.55)}
+.slide [data-t].sel{box-shadow:0 0 0 4px var(--accent)}
+.phwrap{overflow:hidden;cursor:grab}
+.phwrap.drag{cursor:grabbing}
+.phwrap img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;transform-origin:center;user-select:none;-webkit-user-drag:none}
+.phwrap.sel{box-shadow:inset 0 0 0 6px var(--accent)}
+.logo-layer{pointer-events:none}
+.logo-layer img{display:block;width:100%;height:auto}
+#overlay{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .15s;z-index:3}
+#overlay.on{opacity:1}
+#overlay .zone{position:absolute;background:rgba(225,113,69,.32);background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.18) 0 6px,transparent 6px 14px)}
+#overlay .safe{position:absolute;border:1.5px dashed #fff;box-shadow:0 0 0 1px rgba(84,47,40,.35)}
+#overlay .tag{position:absolute;font-size:10px;color:#fff;background:rgba(84,47,40,.85);padding:3px 8px;border-radius:20px;white-space:nowrap}
+.zoomtag{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--muted);background:var(--paper);border:1px solid var(--line);padding:5px 12px;border-radius:30px;white-space:nowrap}
+/* right */
+.right{grid-column:3;grid-row:2/4;border-left:1px solid var(--line);overflow:auto;background:var(--panel)}
+.sec{padding:18px 20px;border-bottom:1px solid var(--line)}
+.sec h3{margin:0 0 12px;font-size:10px;letter-spacing:1.3px;text-transform:uppercase;color:var(--muted);font-weight:500;display:flex;justify-content:space-between;gap:10px}
+.sec h3 span{text-transform:none;letter-spacing:0}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:30px;overflow:hidden;margin-bottom:12px;background:#fff}
+.seg button{border:0;background:none;padding:8px 4px;font-size:11px;color:var(--muted)}
+.seg button.on{background:var(--ink);color:var(--paper)}
+.field{margin-bottom:10px}
+.field label{display:block;font-size:11px;color:var(--muted);margin-bottom:4px}
+.field .ed,.field textarea{width:100%;background:#fff;border:1px solid var(--line);border-radius:6px;padding:8px 10px;min-height:34px;line-height:1.35;outline:none;font:inherit;color:inherit;resize:vertical}
+.field .ed:focus,.field textarea:focus{border-color:var(--accent)}
+.row{display:flex;gap:8px;align-items:center}
+.drop{border:1px dashed #c9bba9;border-radius:8px;padding:14px;text-align:center;color:var(--muted);cursor:pointer;background:#fff;transition:border-color .15s;line-height:1.45}
+.drop:hover{border-color:var(--accent);color:var(--ink)}
+.drop b{color:var(--ink);font-weight:500}
+.drop img{max-height:90px;max-width:100%;display:block;margin:0 auto 6px}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0 10px}
+.chip{border:1px solid var(--line);background:#fff;border-radius:20px;padding:4px 9px;font-size:11px;color:var(--muted)}
+.chip:hover{border-color:var(--accent);color:var(--ink)}
+.pos{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:8px}
+.pos button{background:#fff;border:1px solid var(--line);border-radius:4px;height:26px;font-size:10px;color:var(--muted)}
+.pos button.on{border-color:var(--accent);color:var(--ink);background:#fbe9df}
+.swatches{display:flex;gap:6px;flex-wrap:wrap}
+.sw{width:26px;height:26px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px var(--line);padding:0}
+.sw.on{box-shadow:0 0 0 2px var(--accent)}
+.hint{color:var(--muted);font-size:11px;line-height:1.45;margin:6px 0 0}
+.hint b{color:var(--ink);font-weight:500}
+.err{color:#b23b1d}
+.export{padding:20px}
+.export .note{font-size:11px;color:var(--muted);margin:10px 0 0;line-height:1.5}
+.export .note b{color:var(--ink);font-weight:500}
+.keyrow{display:flex;gap:6px;margin-top:12px}
+.keyrow input{flex:1;border:1px solid var(--line);border-radius:30px;padding:8px 12px;font:inherit;background:#fff;min-width:0}
+.check{display:flex;gap:8px;align-items:center;font-size:12px;margin-top:8px}
+.spin{display:inline-block;width:12px;height:12px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:sp .8s linear infinite;vertical-align:-2px;margin-right:6px}
+@keyframes sp{to{transform:rotate(360deg)}}
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(40,22,17,.45);display:none;align-items:center;justify-content:center;z-index:9}
+.modal.on{display:flex}
+.card{background:var(--paper);border-radius:14px;max-width:420px;padding:30px;width:90%}
+.card h2{font-family:'Instrument Serif',serif;font-weight:400;font-size:34px;line-height:1;margin:0 0 10px}
+.card h2 em{color:#a17c63}
+.card p{color:var(--muted);line-height:1.5}
+.card ul{padding:0;list-style:none;margin:14px 0 20px}
+.card li{padding:8px 0;border-bottom:1px solid var(--line);display:flex;gap:10px}
+.card li::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--accent);margin-top:6px;flex-shrink:0}
+.busy{position:fixed;right:20px;bottom:20px;background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:30px;display:none;z-index:10}
+.busy.on{display:block}
+@media (max-width:980px){
+ .app{grid-template-columns:1fr;grid-template-rows:64px auto 52px 62vh auto;height:auto}
+ .left{grid-row:auto;border-right:0;border-bottom:1px solid var(--line)}
+ .formats,.stage,.right{grid-column:1}
+ .right{grid-row:auto;border-left:0}
+ .grid{grid-template-columns:repeat(4,1fr)}
+ header{padding:0 16px}.wordmark small{display:none}
+}
+</style>
+</head>
+<body>
+<div class="app">
+ <header>
+  <a class="wordmark" href="/">ype media<b>.</b><small>ad editor</small></a>
+  <div class="hdr-right"><div class="lang" id="lang"><button data-l="en">EN</button><button data-l="pl">PL</button></div><span class="plan" id="plan">Free</span><button class="btn small" id="unlockTop">Unlock all 18</button></div>
+ </header>
+ <aside class="left">
+  <div class="tabs"><button class="on" data-tab="feed">Feed designs</button><button data-tab="stories">Story designs</button></div>
+  <div class="grid" id="grid"></div>
+  <div class="freeinfo">3 designs free. <em>15 more</em> with the Ad Kit</div>
+  <p>Every design works in every format: pick Instagram, TikTok or X at the top and the layout adapts to that platform's safe zone.</p>
+  <p>Free downloads are 720 px with a watermark. Ad Kit owners get full size files, no watermark, plus the Figma, Canva and After Effects sources.</p>
+ </aside>
+ <nav class="formats" id="formats"></nav>
+ <main class="stage" id="stage"><div id="holder"><div id="overlay"></div></div><div class="zoomtag" id="zoomtag"></div></main>
+ <aside class="right">
+  <div class="sec">
+   <h3>Background</h3>
+   <div class="seg" id="bgSeg"><button class="on" data-m="upload">My photo</button><button data-m="ai">Generate</button><button data-m="product">My product</button></div>
+   <div id="bgUpload">
+    <div class="drop" id="photoDrop"><b>Upload your photo</b><br>or drop it on the ad. Drag the ad to reposition</div>
+    <input type="file" id="photoFile" accept="image/*" hidden>
+   </div>
+   <div id="bgAi" hidden>
+    <div class="field"><label>Describe the background</label><textarea id="aiPrompt" rows="3" placeholder="Warm travertine stone in soft morning light, pale pink wall"></textarea></div>
+    <div class="chips" id="aiChips"></div>
+    <button class="btn solid" id="aiGo" style="width:100%">Generate background</button>
+   </div>
+   <div id="bgProduct" hidden>
+    <div class="drop" id="packDrop"><b>Upload your packshot</b><br>product photo, ideally on a plain background</div>
+    <input type="file" id="packFile" accept="image/*" hidden>
+    <div class="field" style="margin-top:10px"><label>Where should it stand?</label><textarea id="packPrompt" rows="3" placeholder="On a wet travertine stone, soft pink studio light, water droplets"></textarea></div>
+    <div class="chips" id="packChips"></div>
+    <button class="btn solid" id="packGo" style="width:100%">Create ad scene</button>
+   </div>
+   <p class="hint" id="aiInfo"></p>
+   <div class="field" style="margin-top:12px"><label>Zoom</label><input type="range" id="zoom" min="1" max="2.5" step="0.01" value="1"></div>
+   <div class="row" id="photoPick" style="flex-wrap:wrap"></div>
+  </div>
+  <div class="sec">
+   <h3>Your logo</h3>
+   <div class="drop" id="logoDrop"><b>Upload logo</b><br>PNG or SVG with transparent background</div>
+   <input type="file" id="logoFile" accept="image/png,image/svg+xml,image/webp,image/jpeg" hidden>
+   <div id="logoCtl" style="display:none;margin-top:12px">
+    <div class="field"><label>Size</label><input type="range" id="logoSize" min="60" max="420" value="170"></div>
+    <label class="hint" style="margin:0">Position, always inside the safe zone</label>
+    <div class="pos" id="logoPos">
+     <button data-p="tl">top left</button><button data-p="tc">top</button><button data-p="tr">top right</button>
+     <button data-p="bl">bottom left</button><button data-p="bc">bottom</button><button data-p="br">bottom right</button>
+    </div>
+    <label class="check"><input type="checkbox" id="hideBrand" checked> Hide the sample brand name</label>
+    <button class="btn small" id="logoRemove" style="margin-top:10px">Remove logo</button>
+   </div>
+  </div>
+  <div class="sec">
+   <h3>Text <span>or click any text on the ad</span></h3>
+   <div id="fields"></div>
+  </div>
+  <div class="sec">
+   <h3>Accent colour</h3>
+   <div class="swatches" id="swatches"></div>
+   <p class="hint">Changes buttons and highlights</p>
+  </div>
+  <div class="export">
+   <button class="btn solid" id="exportBtn" style="width:100%">Download PNG</button>
+   <p class="note" id="exportNote"></p>
+   <div class="keyrow" id="keyrow"><input id="keyIn" placeholder="Ad Kit licence key" autocomplete="off"><button class="btn small" id="keyBtn">Unlock</button></div>
+  </div>
+ </aside>
+</div>
+<div class="modal" id="modal"><div class="card">
+ <h2>Unlock the <em>whole kit</em></h2>
+ <p>This design is part of Ad Kit Vol. 1.</p>
+ <ul><li>All 18 designs in every social format</li><li>Full size downloads, no watermark</li><li>Figma, Canva and After Effects files</li><li>Use for your brand and client work</li></ul>
+ <div class="row"><a class="btn solid" id="buyBtn" href="/#shop" style="text-decoration:none">Get Ad Kit, $29</a><button class="btn" id="closeModal">Not now</button></div>
+</div></div>
+<div class="busy" id="busy">Preparing your PNG…</div>
+<script id="slides" type="application/json">{"F01": "<section class=\"slide\" id=\"F01\" data-name=\"F01 Hero\" data-canvas-width=\"1080\" data-canvas-height=\"1350\" style=\"width:1080px;height:1350px;background:#efe2db\"><img class=\"ph\" data-name=\"Photo: replace me\" alt=\"\" src=\"img/f01-0.jpg\" style=\"left:0px;top:0px;width:1080px;height:1350px\"><div style=\"left:72px;top:72px;width:400px;font-family:'archivo','Archivo',sans-serif;font-size:30px;font-weight:800;color:#3b2722;line-height:1;letter-spacing:0.18em;\">OLIA<\/div><div style=\"left:708px;top:72px;width:300px;font-family:'archivo','Archivo',sans-serif;font-size:24px;font-weight:600;color:#3b2722;line-height:1;letter-spacing:0.14em;text-align:right\">NEW SERUM<\/div><div style=\"left:72px;top:170px;width:936px;font-family:'instrument-serif','Instrument Serif',serif;font-size:132px;font-weight:400;font-style:normal;color:#3b2722;line-height:0.95;letter-spacing:-0.01em;\">Skin that drinks<br><i>it all in<\/i><\/div><div style=\"left:72px;top:440px;width:700px;font-family:'archivo','Archivo',sans-serif;font-size:34px;font-weight:400;color:#3b2722;line-height:1.3;letter-spacing:0em;\">Hyaluronic serum for all-day hydration<\/div><div style=\"left:72px;top:1182px;width:400px;height:96px;background:#3b2722;border-radius:40px\"><\/div><div style=\"left:72px;top:1215px;width:400px;font-family:'archivo','Archivo',sans-serif;font-size:30px;font-weight:700;color:#f6ece6;line-height:1;letter-spacing:0em;text-align:center\">Shop the serum<\/div><div style=\"left:708px;top:1208px;width:300px;font-family:'archivo','Archivo',sans-serif;font-size:52px;font-weight:800;color:#3b2722;line-height:1;letter-spacing:0em;text-align:right\">$34<\/div><\/section>", "F02": "<section class=\"slide\" id=\"F02\" data-name=\"F02 Offer\" data-canvas-width=\"1080\" data-canvas-height=\"1350\" style=\"width:1080px;height:1350px;background:#9cc7e8\"><img class=\"ph\" data-name=\"Photo: replace me\" alt=\"\" src=\"img/f02-0.jpg\" style=\"left:0px;top:0px;width:1080px;height:1350px\"><div style=\"left:72px;top:96px;width:600px;font-family:'archivo','Archivo',sans-serif;font-size:98px;font-weight:900;color:#14110f;line-height:0.92;letter-spacing:-0.02em;\">SUMMER<br>STOCK-UP<\/div><div style=\"left:678px;top:72px;width:330px;height:330px;background:#ff5a1f;border-radius:165px\"><\/div><div style=\"left:678px;top:162px;width:330px;font-family:'archivo','Archivo',sans-serif;font-size:132px;font-weight:900;color:#fff;line-height:1;letter-spacing:-0.03em;text-align:center\">30%<\/div><div style=\"left:678px;top:302px;width:330px;font-family:'archivo','Archivo',sans-serif;font-size:44px;font-weight:800;color:#fff;line-height:1;letter-spacing:0.06em;text-align:center\">OFF<\/div><div style=\"left:0px;top:1150px;width:1080px;height:200px;background:#fff7e8;\"><\/div><div style=\"left:72px;top:1200px;width:560px;font-family:'archivo','Archivo',sans-serif;font-size:32px;font-weight:500;color:#14110f;line-height:1.3;letter-spacing:0em;\">Code <b>SUMMER30<\/b><br>Ends Sunday at midnight<\/div><div style=\"left:668px;top:1202px;width:340px;height:96px;background:#ff2d78;border-radius:40px\"><\/div><div style=\"left:668px;top:1235px;width:340px;font-family:'archivo','Archivo',sans-serif;font-size:30px;font-weight:700;color:#fff;line-height:1;letter-spacing:0em;text-align:center\">Grab a 12-pack<\/div><\/section>", "F03": "<section class=\"slide\" id=\"F03\" data-name=\"F03 Before After\" data-canvas-width=\"1080\" data-canvas-height=\"1350\" style=\"width:1080px;height:1350px;background:#f3ece2\"><div style=\"left:72px;top:64px;width:936px;font-family:'instrument-serif','Instrument Serif',serif;font-size:96px;font-weight:400;font-style:normal;color:#2b211c;line-height:1;letter-spacing:-0.01em;\">Same room. <i>One candle.<\/i><\/div><div style=\"left:72px;top:182px;width:936px;font-family:'archivo','Archivo',sans-serif;font-size:28px;font-weight:400;color:#5a4a40;line-height:1.3;letter-spacing:0em;\">Hearth &amp; Clay soy candles, hand-poured in small batches<\/div><img class=\"ph\" data-name=\"Photo: replace me\" alt=\"\" src=\"img/f03-0.jpg\" style=\"left:0px;top:270px;width:538px;height:1080px\"><img class=\"ph\" data-name=\"Photo: replace me\" alt=\"\" src=\"img/f03-1.jpg\" style=\"left:542px;top:270px;width:538px;height:1080px\"><div style=\"left:48px;top:1210px;width:200px;height:72px;background:#f3ece2;border-radius:30px\"><\/div><div style=\"left:48px;top:1233px;width:200px;font-family:'archivo','Archivo',sans-serif;font-size:26px;font-weight:700;color:#2b211c;line-height:1;letter-spacing:0em;text-align:center\">BEFORE<\/div><div style=\"left:590px;top:1210px;width:180px;height:72px;background:#b5532f;border-radius:30px\"><\/div><div style=\"left:590px;top:1233px;width:180px;font-family:'archivo','Archivo',sans-serif;font-size:26px;font-weight:700;color:#fff;line-height:1;letter-spacing:0em;text-align:center\">AFTER<\/div><\/section>", "F04": "<section class=\"slide\" id=\"F04\" data-name=\"F04 Testimonial\" data-canvas-width=\"1080\" data-canvas-height=\"1350\" style=\"width:1080px;height:1350px;background:#fff\"><img class=\"ph\" data-name=\"Photo: replace me\" alt=\"\" src=\"img/f04-0.jpg\" style=\"left:0px;top:0px;width:1080px;height:860px\"><div style=\"left:0px;top:860px;width:1080px;height:490px;background:#fbf6f3;\"><\/div><div style=\"left:72px;top:925px;width:600px;font-family:'archivo','Archivo',sans-serif;font-size:26px;font-weight:800;color:#c9822a;line-height:1;letter-spacing:0.16em;\">RATED 5 OUT OF 5<\/div><div style=\"left:72px;top:1000px;width:936px;font-family:'instrument-serif','Instrument Serif',serif;font-size:70px;font-weight:400;font-style:normal;color:#2b1d18;line-height:1.05;letter-spacing:-0.01em;\">&ldquo;I stopped reaching for foundation after three weeks.&rdquo;<\/div><div style=\"left:72px;top:1242px;width:700px;font-family:'archivo','Archivo',sans-serif;font-size:28px;font-weight:600;color:#7a655c;line-height:1;letter-spacing:0em;\">Customer Name, verified buyer<\/div><div style=\"left:808px;top:1242px;width:200px;font-family:'archivo','Archivo',sans-serif;font-size:28px;font-weight:800;color:#2b1d18;line-height:1;letter-spacing:0.18em;text-align:right\">OLIA<\/div><\/section>", "F05": "<section class=\"slide\" id=\"F05\" data-name=\"F05 Benefits\" data-canvas-width=\"1080\" data-canvas-height=\"1350\" style=\"width:1080px;height:1350px;background:#d9b98d\"><img class=\"ph\" data-name=\"Photo: replace me\" alt=\"\" src=\"img/f05-0.jpg\" style=\"left:0px;top:0px;width:1080px;height:1350px\"><div style=\"left:72px;top:72px;width:400px;font-family:'archivo','Archivo',sans-serif;font-size:34px;font-weight:800;color:#2f4a34;line-height:1;letter-spacing:-0.01em;\">rootwell<\/div><div style=\"left:72px;top:200px;width:520px;font-family:'instrument-serif','Instrument Serif',serif;font-size:104px;font-weight:400;font-style:normal;color:#2f4a34;line-height:0.95;letter-spacing:-0.01em;\">Your morning,<br><i>sorted<\/i><\/div><div style=\"left:72px;top:560px;width:56px;height:56px;background:#2f4a34;border-radius:23px\"><\/div><div style=\"left:72px;top:573px;width:56px;font-family:'archivo','Archivo',sans-serif;font-size:30px;font-weight:800;color:#f3ead8;line-height:1;letter-spacing:0em;text-align:center\">1<\/div><div style=\"left:152px;top:562px;width:340px;font-family:'archivo','Archivo',sans-serif;font-size:31px;font-weight:600;color:#2f4a34;line-height:1.2;letter-spacing:0em;\">Magnesium + B6 for steady energy<\/div><div style=\"left:72px;top:688px;width:56px;height:56px;background:#2f4a34;border-radius:23px\"><\/div><div style=\"left:72px;top:701px;width:56px;font-family:'archivo','Archivo',sans-serif;font-size:30px;font-weight:800;color:#f3ead8;line-height:1;letter-spacing:0em;text-align:center\">2<\/div><div style=\"left:152px;top:690px;width:340px;font-family:'archivo','Archivo',sans-serif;font-size:31px;font-weight:600;color:#2f4a34;line-height:1.2;letter-spacing:0em;\">One capsule, zero aftertaste<\/div><div style=\"left:72px;top:816px;width:56px;height:56px;background:#2f4a34;border-radius:23px\"><\/div><div style=\"left:72px;top:829px;width:56px;font-family:'archivo','Archivo',sans-serif;font-size:30px;font-weight:800;color:#f3ead8;line-height:1;letter-spacing:0em;text-align:center\">3<\/div><div style=\"left:152px;top:818px;width:340px;font-family:'archivo','Archivo',sans-serif;font-size:31px;font-weight:600;color:#2f4a34;line-height:1.2;letter-spacing:0em;\">Third-party lab tested<\/div><div style=\"left:72px;top:1182px;width:380px;height:96px;background:#2f4a34;border-radius:40px\"><\/div><div style=\"left:72px;top:1215px;width:380px;font-family:'archivo','Archivo',sans-serif;font-size:30px;font-weight:700;color:#f3ead8;line-height:1;letter-spacing:0em;text-align:center\">Try 30 days<\/div><\/section>", "F06": "<section class=\"slide\" id=\"F06\" data-name=\"F06 Us vs Them\" data-canvas-width=\"1080\" data-canvas-height=\"1350\" style=\"width:1080px;height:1350px;background:#14161b\"><img class=\"ph\" data-name=\"Photo: replace me\" alt=\"\" src=\"img/f06-0.jpg\" style=\"left:0px;top:0px;width:1080px;height:860px\"><div style=\"left:72px;top:72px;width:936px;font-family:'archivo','Archivo',sans-serif;font-size:84px;font-weight:800;color:#fff;line-height:1.0;letter-spacing:-0.02em;\">Not all earbuds<br>are built the same<\/div><div style=\"left:72px;top:900px;width:420px;\"><\/div><div style=\"left:560px;top:900px;width:220px;font-family:'archivo','Archivo',sans-serif;font-size:28px;font-weight:800;color:#7fa98a;line-height:1;letter-spacing:0.16em;text-align:center\">PEBL<\/div><div style=\"left:790px;top:900px;width:220px;font-family:'archivo','Archivo',sans-serif;font-size:28px;font-weight:800;color:#6d7380;line-height:1;letter-spacing:0.16em;text-align:center\">OTHERS<\/div><div style=\"left:72px;top:950px;width:936px;height:1px;background:#2a2e37;\"><\/div><div style=\"left:72px;top:974px;width:480px;font-family:'archivo','Archivo',sans-serif;font-size:32px;font-weight:500;color:#e9ecf2;line-height:1;letter-spacing:0em;\">Battery life<\/div><div style=\"left:560px;top:972px;width:220px;font-family:'archivo','Archivo',sans-serif;font-size:36px;font-weight:800;color:#7fa98a;line-height:1;letter-spacing:0em;text-align:center\">32 h<\/div><div style=\"left:790px;top:972px;width:220px;font-family:'archivo','Archivo',sans-serif;font-size:36px;font-weight:600;color:#6d7380;line-height:1;letter-spacing:0em;text-align:center\">18 h<\/div><div style=\"left:72px;top:1032px;width:936px;height:1px;background:#2a2e37;\"><\/div><div style=\"left:72px;top:1056px;width:480px;font-family:'archivo','Archivo',sans-serif;font-size:32px;font-weight:500;color:#e9ecf2;line-height:1;letter-spacing:0em;\">Sweat and rain proof<\/div><div style=\"left:560px;top:1054px;width:220px;font-family:'archivo','Archivo',sans-serif;font-size:36px;font-weight:800;color:#7fa98a;line-height:1;letter-spacing:0em;text-align:center\">Yes<\/div><div style=\"left:790px;top:1054px;width:220px;font-family:'archivo','Archivo',sans-serif;font-size:36px;font-weight:600;color:#6d7380;line-height:1;letter-spacing:0em;text-align:center\">No<\/div><div style=\"left:72px;top:1114px;width:936px;height:1px;background:#2a2e37;\"><\/div><div style=\"left:72px;top:1138px;width:480px;font-family:'archivo','Archivo',sans-serif;font-size:32px;font-weight:500;color:#e9ecf2;line-height:1;letter-spacing:0em;\">Fits a jeans pocket<\/div><div style=\"left:560px;top:1136px;width:220px;font-family:'archivo','Archivo',sans-serif;font-size:36px;font-weight:800;color:#7fa98a;line-height:1;letter-spacing:0em;text-align:center\">Yes<\/div><div style=\"left:790px;top:1136px;width:220px;font-family:'archivo','Archivo',sans-serif;font-size:36px;font-weight:600;color:#6d7380;line-height:1;letter-spacing:0em;text-align:center\">No<\/div><div style=\"left:72px;top:1196px;width:936px;height:1px;background:#2a2e37;\"><\/div><div style=\"left:72px;top:1220px;width:480px;font-family:'archivo','Archivo',sans-serif;font-size:32px;font-weight:500;color:#e9ecf2;line-height:1;letter-spacing:0em;\">Price<\/div><div style=\"left:560px;top:1218px;width:220px;font-family:'archivo','Archivo',sans-serif;font-size:36px;font-weight:800;color:#7fa98a;line-height:1;letter-spacing:0em;text-align:center\">$79<\/div><div style=\"left:790px;top:1218px;width:220px;font-family:'archivo','Archivo',sans-serif;font-size:36px;font-weight:600;color:#6d7380;line-height:1;letter-spacing:0em;text-align:center\">$149<\/div><\/section>", "F07": "<section class=\"slide\" id=\"F07\" data-name=\"F07 Feature Callouts\" data-canvas-width=\"1080\" data-canvas-height=\"1350\" style=\"width:1080px;height:1350px;background:#efe2db\"><img class=\"ph\" data-name=\"Photo: replace me\" alt=\"\" src=\"img/f07-0.jpg\" style=\"left:0px;top:0px;width:1080px;height:1350px\"><div style=\"left:72px;top:72px;width:936px;font-family:'instrument-serif','Instrument Serif',serif;font-size:110px;font-weight:400;font-style:normal;color:#3b2722;line-height:0.95;letter-spacing:-0.01em;\">What&rsquo;s inside<br><i>every drop<\/i><\/div><div style=\"left:200px;top:760px;width:220px;height:2px;background:#3b2722;\"><\/div><div style=\"left:411px;top:751px;width:18px;height:18px;border-radius:9px;background:#3b2722\"><\/div><div style=\"left:62px;top:728px;width:240px;height:64px;background:#fff;border-radius:26px\"><\/div><div style=\"left:62px;top:748px;width:240px;font-family:'archivo','Archivo',sans-serif;font-size:24px;font-weight:700;color:#3b2722;line-height:1;letter-spacing:0em;text-align:center\">2% Hyaluronic<\/div><div style=\"left:640px;top:600px;width:2px;height:100px;background:#3b2722;\"><\/div><div style=\"left:631px;top:691px;width:18px;height:18px;border-radius:9px;background:#3b2722\"><\/div><div style=\"left:520px;top:536px;width:250px;height:64px;background:#fff;border-radius:26px\"><\/div><div style=\"left:520px;top:556px;width:250px;font-family:'archivo','Archivo',sans-serif;font-size:24px;font-weight:700;color:#3b2722;line-height:1;letter-spacing:0em;text-align:center\">Niacinamide<\/div><div style=\"left:380px;top:1000px;width:2px;height:110px;background:#3b2722;\"><\/div><div style=\"left:371px;top:991px;width:18px;height:18px;border-radius:9px;background:#3b2722\"><\/div><div style=\"left:250px;top:1110px;width:270px;height:64px;background:#fff;border-radius:26px\"><\/div><div style=\"left:250px;top:1130px;width:270px;font-family:'archivo','Archivo',sans-serif;font-size:24px;font-weight:700;color:#3b2722;line-height:1;letter-spacing:0em;text-align:center\">Fragrance free<\/div><div style=\"left:760px;top:980px;width:120px;height:2px;background:#3b2722;\"><\/div><div style=\"left:751px;top:971px;width:18px;height:18px;border-radius:9px;background:#3b2722\"><\/div><div style=\"left:820px;top:948px;width:196px;height:64px;background:#fff;border-radius:26px\"><\/div><div style=\"left:820px;top:968px;width:196px;font-family:'archivo','Archivo',sans-serif;font-size:24px;font-weight:700;color:#3b2722;line-height:1;letter-spacing:0em;text-align:center\">pH 5.5<\/div><\/section>", "F08": "<section class=\"slide\" id=\"F08\" data-name=\"F08 Bold Statement\" data-canvas-width=\"1080\" data-canvas-height=\"1350\" style=\"width:1080px;height:1350px;background:#ebe3d6\"><div style=\"left:72px;top:72px;width:600px;font-family:'archivo','Archivo',sans-serif;font-size:30px;font-weight:800;color:#1b1b1b;line-height:1;letter-spacing:0.2em;\">KNOTT<\/div><div style=\"left:72px;top:190px;width:960px;font-family:'archivo','Archivo',sans-serif;font-size:158px;font-weight:900;color:#1b1b1b;line-height:0.88;letter-spacing:-0.03em;\">STOP<br>BUYING<br>HOODIES<br>THAT <span style='color:#2c3a5a'>SHRINK<\/span><\/div><img class=\"ph\" data-name=\"Photo: replace me\" alt=\"\" src=\"img/f08-0.jpg\" style=\"left:678px;top:858px;width:330px;height:420px\"><div style=\"left:72px;top:1028px;width:520px;font-family:'archivo','Archivo',sans-serif;font-size:30px;font-weight:500;color:#1b1b1b;line-height:1.3;letter-spacing:0em;\">The 480 gsm Heavyweight Hoodie. Pre-shrunk, made to last.<\/div><div style=\"left:72px;top:1182px;width:380px;height:96px;background:#2c3a5a;border-radius:40px\"><\/div><div style=\"left:72px;top:1215px;width:380px;font-family:'archivo','Archivo',sans-serif;font-size:30px;font-weight:700;color:#fff;line-height:1;letter-spacing:0em;text-align:center\">Shop the hoodie<\/div><\/section>", "F09": "<section class=\"slide\" id=\"F09\" data-name=\"F09 Problem Solution\" data-canvas-width=\"1080\" data-canvas-height=\"1350\" style=\"width:1080px;height:1350px;background:#2a1d16\"><div style=\"left:72px;top:96px;width:600px;font-family:'archivo','Archivo',sans-serif;font-size:26px;font-weight:800;color:#c9a46a;line-height:1;letter-spacing:0.2em;\">THE PROBLEM<\/div><div style=\"left:72px;top:150px;width:936px;font-family:'instrument-serif','Instrument Serif',serif;font-size:108px;font-weight:400;font-style:normal;color:#f3e6cf;line-height:0.95;letter-spacing:-0.01em;\">Gold that turns<br><i>green in a week<\/i><\/div><img class=\"ph\" data-name=\"Photo: replace me\" alt=\"\" src=\"img/f09-0.jpg\" style=\"left:0px;top:470px;width:1080px;height:880px\"><div style=\"left:72px;top:978px;width:620px;height:300px;background:#f3e6cf;\"><\/div><div style=\"left:116px;top:1018px;width:540px;font-family:'archivo','Archivo',sans-serif;font-size:26px;font-weight:800;color:#8a6a3a;line-height:1;letter-spacing:0.2em;\">THE FIX<\/div><div style=\"left:116px;top:1068px;width:540px;font-family:'archivo','Archivo',sans-serif;font-size:34px;font-weight:600;color:#2a1d16;line-height:1.25;letter-spacing:0em;\">18k gold plated, waterproof, made for every single day.<\/div><div style=\"left:116px;top:1214px;width:300px;font-family:'archivo','Archivo',sans-serif;font-size:26px;font-weight:800;color:#2a1d16;line-height:1;letter-spacing:0.06em;\">Sora Gold<\/div><\/section>", "F10": "<section class=\"slide\" id=\"F10\" data-name=\"F10 Bundle\" data-canvas-width=\"1080\" data-canvas-height=\"1350\" style=\"width:1080px;height:1350px;background:#f4e6e1\"><div style=\"left:72px;top:72px;width:400px;font-family:'archivo','Archivo',sans-serif;font-size:30px;font-weight:800;color:#3b2722;line-height:1;letter-spacing:0.18em;\">OLIA<\/div><div style=\"left:72px;top:150px;width:936px;font-family:'instrument-serif','Instrument Serif',serif;font-size:140px;font-weight:400;font-style:normal;color:#3b2722;line-height:0.95;letter-spacing:-0.01em;\">The <i>Glow<\/i> Set<\/div><div style=\"left:72px;top:320px;width:936px;font-family:'archivo','Archivo',sans-serif;font-size:36px;font-weight:500;color:#3b2722;line-height:1.2;letter-spacing:0em;\">Three steps. Ten minutes. Save 20%.<\/div><img class=\"ph\" data-name=\"Photo: replace me\" alt=\"\" src=\"img/f10-0.jpg\" style=\"left:72px;top:470px;width:296px;height:440px\"><div style=\"left:72px;top:935px;width:296px;font-family:'archivo','Archivo',sans-serif;font-size:28px;font-weight:500;color:#3b2722;line-height:1;letter-spacing:0em;\"><b>01<\/b>&nbsp;&nbsp;Serum<\/div><img class=\"ph\" data-name=\"Photo: replace me\" alt=\"\" src=\"img/f10-1.jpg\" style=\"left:392px;top:470px;width:296px;height:440px\"><div style=\"left:392px;top:935px;width:296px;font-family:'archivo','Archivo',sans-serif;font-size:28px;font-weight:500;color:#3b2722;line-height:1;letter-spacing:0em;\"><b>02<\/b>&nbsp;&nbsp;Gel mask<\/div><img class=\"ph\" data-name=\"Photo: replace me\" alt=\"\" src=\"img/f10-2.jpg\" style=\"left:712px;top:470px;width:296px;height:440px\"><div style=\"left:712px;top:935px;width:296px;font-family:'archivo','Archivo',sans-serif;font-size:28px;font-weight:500;color:#3b2722;line-height:1;letter-spacing:0em;\"><b>03<\/b>&nbsp;&nbsp;Daily ritual<\/div><div style=\"left:0px;top:1100px;width:1080px;height:250px;background:#3b2722;\"><\/div><div style=\"left:72px;top:1170px;width:500px;font-family:'archivo','Archivo',sans-serif;font-size:72px;font-weight:800;color:#f6ece6;line-height:1;letter-spacing:0em;\">$89 <span style='font-size:34px;font-weight:500;color:#b89a8f;text-decoration:line-through'>$112<\/span><\/div><div style=\"left:668px;top:1177px;width:340px;height:96px;background:#f6ece6;border-radius:40px\"><\/div><div style=\"left:668px;top:1210px;width:340px;font-family:'archivo','Archivo',sans-serif;font-size:30px;font-weight:700;color:#3b2722;line-height:1;letter-spacing:0em;text-align:center\">Get the set<\/div><\/section>", "F11": "<section class=\"slide\" id=\"F11\" data-name=\"F11 New Launch\" data-canvas-width=\"1080\" data-canvas-height=\"1350\" style=\"width:1080px;height:1350px;background:#1a1d24\"><img class=\"ph\" data-name=\"Photo: replace me\" alt=\"\" src=\"img/f11-0.jpg\" style=\"left:0px;top:0px;width:1080px;height:1350px\"><div style=\"left:0px;top:72px;width:1080px;height:68px;background:#2f6bff;\"><\/div><div style=\"left:-20px;top:88px;width:1400px;font-family:'archivo','Archivo',sans-serif;font-size:32px;font-weight:900;color:#fff;line-height:1;letter-spacing:0.04em;white-space:nowrap\">JUST DROPPED &nbsp;/&nbsp; JUST DROPPED &nbsp;/&nbsp; JUST DROPPED &nbsp;/&nbsp; JUST DROPPED &nbsp;/&nbsp; JUST DROPPED &nbsp;/&nbsp; JUST DROPPED &nbsp;/&nbsp; <\/div><div style=\"left:72px;top:200px;width:936px;font-family:'archivo','Archivo',sans-serif;font-size:120px;font-weight:800;color:#fff;line-height:1;letter-spacing:-0.03em;\">Meet PEBL<\/div><div style=\"left:72px;top:335px;width:936px;font-family:'instrument-serif','Instrument Serif',serif;font-size:56px;font-weight:400;font-style:italic;color:#cfd8e8;line-height:1.05;letter-spacing:-0.01em;\">Earbuds shaped like a pocket stone<\/div><div style=\"left:72px;top:1182px;width:360px;height:96px;background:#fff;border-radius:40px\"><\/div><div style=\"left:72px;top:1215px;width:360px;font-family:'archivo','Archivo',sans-serif;font-size:30px;font-weight:700;color:#14161b;line-height:1;letter-spacing:0em;text-align:center\">Pre-order now<\/div><div style=\"left:648px;top:1214px;width:360px;font-family:'archivo','Archivo',sans-serif;font-size:28px;font-weight:600;color:#cfd8e8;line-height:1;letter-spacing:0em;text-align:right\">Ships November 14<\/div><\/section>", "F12": "<section class=\"slide\" id=\"F12\" data-name=\"F12 Social Proof Stats\" data-canvas-width=\"1080\" data-canvas-height=\"1350\" style=\"width:1080px;height:1350px;background:#2b2c30\"><img class=\"ph\" data-name=\"Photo: replace me\" alt=\"\" src=\"img/f12-0.jpg\" style=\"left:0px;top:0px;width:1080px;height:1350px\"><div style=\"left:650px;top:72px;width:358px;font-family:'archivo','Archivo',sans-serif;font-size:30px;font-weight:800;color:#efe6d6;line-height:1;letter-spacing:0.2em;\">KNOTT<\/div><div style=\"left:650px;top:330px;width:380px;font-family:'archivo','Archivo',sans-serif;font-size:112px;font-weight:900;color:#efe6d6;line-height:1;letter-spacing:-0.03em;\">50K+<\/div><div style=\"left:650px;top:454px;width:380px;font-family:'archivo','Archivo',sans-serif;font-size:30px;font-weight:500;color:#b9b1a4;line-height:1;letter-spacing:0em;\">happy customers<\/div><div style=\"left:650px;top:600px;width:380px;font-family:'archivo','Archivo',sans-serif;font-size:112px;font-weight:900;color:#efe6d6;line-height:1;letter-spacing:-0.03em;\">4.8/5<\/div><div style=\"left:650px;top:724px;width:380px;font-family:'archivo','Archivo',sans-serif;font-size:30px;font-weight:500;color:#b9b1a4;line-height:1;letter-spacing:0em;\">average rating<\/div><div style=\"left:650px;top:870px;width:380px;font-family:'archivo','Archivo',sans-serif;font-size:112px;font-weight:900;color:#efe6d6;line-height:1;letter-spacing:-0.03em;\">100<\/div><div style=\"left:650px;top:994px;width:380px;font-family:'archivo','Archivo',sans-serif;font-size:30px;font-weight:500;color:#b9b1a4;line-height:1;letter-spacing:0em;\">washes tested<\/div><div style=\"left:650px;top:1248px;width:380px;font-family:'archivo','Archivo',sans-serif;font-size:20px;font-weight:400;color:#9a9285;line-height:1.2;letter-spacing:0em;\">*Replace with your own verified numbers<\/div><\/section>", "S01": "<section class=\"slide\" id=\"S01\" data-name=\"S01 UGC Caption\" data-canvas-width=\"1080\" data-canvas-height=\"1920\" style=\"width:1080px;height:1920px;background:#efe2db\"><img class=\"ph\" data-name=\"Photo: replace me\" alt=\"\" src=\"img/s01-0.jpg\" style=\"left:0px;top:0px;width:1080px;height:1920px\"><div style=\"left:72px;top:1180px;width:560px;height:72px;background:#fff;border-radius:12px\"><\/div><div style=\"left:94px;top:1193px;width:516px;font-family:'archivo','Archivo',sans-serif;font-size:46px;font-weight:700;color:#111;line-height:1;letter-spacing:0em;white-space:nowrap\">POV: you finally found<\/div><div style=\"left:72px;top:1262px;width:470px;height:72px;background:#fff;border-radius:12px\"><\/div><div style=\"left:94px;top:1275px;width:426px;font-family:'archivo','Archivo',sans-serif;font-size:46px;font-weight:700;color:#111;line-height:1;letter-spacing:0em;white-space:nowrap\">a serum that works<\/div><div style=\"left:72px;top:1440px;width:380px;height:100px;background:#3b2722;border-radius:42px\"><\/div><div style=\"left:72px;top:1473px;width:380px;font-family:'archivo','Archivo',sans-serif;font-size:34px;font-weight:700;color:#f6ece6;line-height:1;letter-spacing:0em;text-align:center\">Shop OLIA<\/div><\/section>", "S02": "<section class=\"slide\" id=\"S02\" data-name=\"S02 Offer\" data-canvas-width=\"1080\" data-canvas-height=\"1920\" style=\"width:1080px;height:1920px;background:#ff7a1a\"><img class=\"ph\" data-name=\"Photo: replace me\" alt=\"\" src=\"img/s02-0.jpg\" style=\"left:0px;top:0px;width:1080px;height:1920px\"><div style=\"left:72px;top:300px;width:440px;font-family:'archivo','Archivo',sans-serif;font-size:130px;font-weight:900;color:#fff;line-height:0.9;letter-spacing:-0.03em;\">BUY 2<br>GET 1<\/div><div style=\"left:72px;top:560px;width:400px;font-family:'instrument-serif','Instrument Serif',serif;font-size:150px;font-weight:400;font-style:italic;color:#fff;line-height:0.9;letter-spacing:-0.01em;\">FREE<\/div><div style=\"left:72px;top:760px;width:400px;font-family:'archivo','Archivo',sans-serif;font-size:34px;font-weight:600;color:#fff;line-height:1.25;letter-spacing:0em;\">Mix any flavours. This weekend only.<\/div><div style=\"left:72px;top:1440px;width:380px;height:100px;background:#fff;border-radius:42px\"><\/div><div style=\"left:72px;top:1473px;width:380px;font-family:'archivo','Archivo',sans-serif;font-size:34px;font-weight:700;color:#ff2d78;line-height:1;letter-spacing:0em;text-align:center\">Build my pack<\/div><\/section>", "S03": "<section class=\"slide\" id=\"S03\" data-name=\"S03 Benefits\" data-canvas-width=\"1080\" data-canvas-height=\"1920\" style=\"width:1080px;height:1920px;background:#111\"><img class=\"ph\" data-name=\"Photo: replace me\" alt=\"\" src=\"img/s03-0.jpg\" style=\"left:0px;top:0px;width:1080px;height:1180px\"><div style=\"left:0px;top:1180px;width:1080px;height:740px;background:#0f0f10;\"><\/div><div style=\"left:72px;top:1220px;width:936px;font-family:'archivo','Archivo',sans-serif;font-size:72px;font-weight:800;color:#fff;line-height:1;letter-spacing:-0.02em;\">Built for the <span style='color:#d8ff3a'>5am<\/span> crew<\/div><div style=\"left:72px;top:1340px;width:48px;height:48px;background:#d8ff3a;border-radius:20px\"><\/div><div style=\"left:72px;top:1351px;width:48px;font-family:'archivo','Archivo',sans-serif;font-size:26px;font-weight:900;color:#111;line-height:1;letter-spacing:0em;text-align:center\">1<\/div><div style=\"left:144px;top:1344px;width:800px;font-family:'archivo','Archivo',sans-serif;font-size:38px;font-weight:600;color:#fff;line-height:1.1;letter-spacing:0em;\">Ice cold for 24 hours<\/div><div style=\"left:72px;top:1426px;width:48px;height:48px;background:#d8ff3a;border-radius:20px\"><\/div><div style=\"left:72px;top:1437px;width:48px;font-family:'archivo','Archivo',sans-serif;font-size:26px;font-weight:900;color:#111;line-height:1;letter-spacing:0em;text-align:center\">2<\/div><div style=\"left:144px;top:1430px;width:800px;font-family:'archivo','Archivo',sans-serif;font-size:38px;font-weight:600;color:#fff;line-height:1.1;letter-spacing:0em;\">Leak-proof flip lid<\/div><div style=\"left:72px;top:1512px;width:48px;height:48px;background:#d8ff3a;border-radius:20px\"><\/div><div style=\"left:72px;top:1523px;width:48px;font-family:'archivo','Archivo',sans-serif;font-size:26px;font-weight:900;color:#111;line-height:1;letter-spacing:0em;text-align:center\">3<\/div><div style=\"left:144px;top:1516px;width:800px;font-family:'archivo','Archivo',sans-serif;font-size:38px;font-weight:600;color:#fff;line-height:1.1;letter-spacing:0em;\">Fits every cup holder<\/div><div style=\"left:72px;top:1580px;width:600px;font-family:'archivo','Archivo',sans-serif;font-size:26px;font-weight:600;color:#8a8a8a;line-height:1;letter-spacing:0.04em;\">TEMPO bottle, 750 ml<\/div><\/section>", "S04": "<section class=\"slide\" id=\"S04\" data-name=\"S04 Editorial\" data-canvas-width=\"1080\" data-canvas-height=\"1920\" style=\"width:1080px;height:1920px;background:#8a7563\"><img class=\"ph\" data-name=\"Photo: replace me\" alt=\"\" src=\"img/s04-0.jpg\" style=\"left:0px;top:0px;width:1080px;height:1240px\"><div style=\"left:0px;top:1240px;width:1080px;height:680px;background:#3a2b20;\"><\/div><div style=\"left:72px;top:1270px;width:936px;font-family:'instrument-serif','Instrument Serif',serif;font-size:120px;font-weight:400;font-style:normal;color:#f6efe4;line-height:0.95;letter-spacing:-0.01em;\">Everyday <i>gold<\/i><\/div><div style=\"left:72px;top:1410px;width:600px;font-family:'archivo','Archivo',sans-serif;font-size:34px;font-weight:600;color:#f6efe4;line-height:1.3;letter-spacing:0em;\">Sora Gold pendant necklace<br><span style='font-weight:400;font-size:30px'>$68, free engraving<\/span><\/div><div style=\"left:728px;top:1420px;width:280px;height:96px;background:#f6efe4;border-radius:40px\"><\/div><div style=\"left:728px;top:1452px;width:280px;font-family:'archivo','Archivo',sans-serif;font-size:32px;font-weight:700;color:#3a2b20;line-height:1;letter-spacing:0em;text-align:center\">Shop now<\/div><\/section>", "S05": "<section class=\"slide\" id=\"S05\" data-name=\"S05 Last Chance\" data-canvas-width=\"1080\" data-canvas-height=\"1920\" style=\"width:1080px;height:1920px;background:#b5532f\"><div style=\"left:72px;top:250px;width:600px;font-family:'archivo','Archivo',sans-serif;font-size:28px;font-weight:800;color:#f3ece2;line-height:1;letter-spacing:0.2em;\">LAST CHANCE<\/div><div style=\"left:72px;top:300px;width:936px;font-family:'instrument-serif','Instrument Serif',serif;font-size:116px;font-weight:400;font-style:normal;color:#f3ece2;line-height:0.95;letter-spacing:-0.01em;\">The autumn edit<br>ends <i>tonight<\/i><\/div><div style=\"left:72px;top:640px;width:196px;height:170px;background:#f3ece2;border-radius:16px\"><\/div><div style=\"left:72px;top:660px;width:196px;font-family:'archivo','Archivo',sans-serif;font-size:88px;font-weight:900;color:#b5532f;line-height:1;letter-spacing:0em;text-align:center\">02<\/div><div style=\"left:72px;top:760px;width:196px;font-family:'archivo','Archivo',sans-serif;font-size:22px;font-weight:700;color:#b5532f;line-height:1;letter-spacing:0.12em;text-align:center\">HRS<\/div><div style=\"left:292px;top:640px;width:196px;height:170px;background:#f3ece2;border-radius:16px\"><\/div><div style=\"left:292px;top:660px;width:196px;font-family:'archivo','Archivo',sans-serif;font-size:88px;font-weight:900;color:#b5532f;line-height:1;letter-spacing:0em;text-align:center\">14<\/div><div style=\"left:292px;top:760px;width:196px;font-family:'archivo','Archivo',sans-serif;font-size:22px;font-weight:700;color:#b5532f;line-height:1;letter-spacing:0.12em;text-align:center\">MIN<\/div><div style=\"left:512px;top:640px;width:196px;height:170px;background:#f3ece2;border-radius:16px\"><\/div><div style=\"left:512px;top:660px;width:196px;font-family:'archivo','Archivo',sans-serif;font-size:88px;font-weight:900;color:#b5532f;line-height:1;letter-spacing:0em;text-align:center\">09<\/div><div style=\"left:512px;top:760px;width:196px;font-family:'archivo','Archivo',sans-serif;font-size:22px;font-weight:700;color:#b5532f;line-height:1;letter-spacing:0.12em;text-align:center\">SEC<\/div><img class=\"ph\" data-name=\"Photo: replace me\" alt=\"\" src=\"img/s05-0.jpg\" style=\"left:0px;top:880px;width:1080px;height:1040px\"><div style=\"left:72px;top:1440px;width:380px;height:100px;background:#f3ece2;border-radius:42px\"><\/div><div style=\"left:72px;top:1473px;width:380px;font-family:'archivo','Archivo',sans-serif;font-size:34px;font-weight:700;color:#b5532f;line-height:1;letter-spacing:0em;text-align:center\">Shop the edit<\/div><\/section>", "S06": "<section class=\"slide\" id=\"S06\" data-name=\"S06 Hook Question\" data-canvas-width=\"1080\" data-canvas-height=\"1920\" style=\"width:1080px;height:1920px;background:#2b2c30\"><img class=\"ph\" data-name=\"Photo: replace me\" alt=\"\" src=\"img/s06-0.jpg\" style=\"left:0px;top:0px;width:1080px;height:1920px\"><div style=\"left:72px;top:270px;width:936px;height:230px;background:#fff;border-radius:24px\"><\/div><div style=\"left:120px;top:318px;width:840px;font-family:'archivo','Archivo',sans-serif;font-size:70px;font-weight:800;color:#111;line-height:1.05;letter-spacing:-0.02em;\">Would your hoodie survive 100 washes?<\/div><div style=\"left:72px;top:1420px;width:936px;font-family:'instrument-serif','Instrument Serif',serif;font-size:96px;font-weight:400;font-style:italic;color:#efe6d6;line-height:1;letter-spacing:-0.01em;\">Ours did.<\/div><div style=\"left:72px;top:1540px;width:380px;height:96px;background:#efe6d6;border-radius:40px\"><\/div><div style=\"left:72px;top:1572px;width:380px;font-family:'archivo','Archivo',sans-serif;font-size:32px;font-weight:700;color:#1b1b1b;line-height:1;letter-spacing:0em;text-align:center\">See the test<\/div><\/section>"}</script>
+<script>
+const AI_URL='https://ype-ai.thehypemedia0.workers.dev';
+const SLIDES=JSON.parse(document.getElementById('slides').textContent);
+const FREE=['F01','F08','S02'];
+const NAMES={F01:'Hero',F02:'Offer',F03:'Before / After',F04:'Testimonial',F05:'Benefits',F06:'Us vs them',F07:'Callouts',F08:'Bold statement',F09:'Problem / fix',F10:'Bundle',F11:'New launch',F12:'Social proof',S01:'UGC caption',S02:'Offer',S03:'Benefits',S04:'Editorial',S05:'Last chance',S06:'Hook question'};
+// safe zones in px: [top,right,bottom,left]
+const FORMATS=[
+ {id:'ig-post',name:'Instagram post',short:'IG post',ratio:'4:5',w:1080,h:1350,safe:[60,60,60,60],ui:'Keep key content away from the edges. Profile grid shows a 3:4 crop'},
+ {id:'ig-square',name:'Instagram square',short:'IG square',ratio:'1:1',w:1080,h:1080,safe:[60,60,60,60],ui:'Keep key content away from the edges'},
+ {id:'ig-story',name:'Instagram Story',short:'IG Story',ratio:'9:16',w:1080,h:1920,safe:[270,64,380,64],ui:'Top: profile and progress bar. Bottom: reply bar and CTA'},
+ {id:'ig-reels',name:'Instagram Reels',short:'IG Reels',ratio:'9:16',w:1080,h:1920,safe:[220,140,420,64],ui:'Right: like, comment, share. Bottom: caption and audio'},
+ {id:'fb-post',name:'Facebook post',short:'FB post',ratio:'4:5',w:1080,h:1350,safe:[60,60,60,60],ui:'Keep key content away from the edges'},
+ {id:'fb-story',name:'Facebook Story',short:'FB Story',ratio:'9:16',w:1080,h:1920,safe:[270,64,380,64],ui:'Top: profile. Bottom: reply bar and CTA'},
+ {id:'tiktok',name:'TikTok',short:'TikTok',ratio:'9:16',w:1080,h:1920,safe:[150,140,440,64],ui:'Right: TikTok buttons. Bottom: caption, sound and CTA'},
+ {id:'yt-shorts',name:'YouTube Shorts',short:'YT Shorts',ratio:'9:16',w:1080,h:1920,safe:[240,190,480,64],ui:'Right: Shorts buttons. Bottom: title and channel'},
+ {id:'x-post',name:'X post',short:'X post',ratio:'16:9',w:1600,h:900,safe:[50,60,50,60],ui:'Timeline shows the full 16:9 image'}
+];
+const SWATCHES=[null,'#3b2722','#1b1b1b','#2c3a5a','#2f4a35','#e17145','#e8336d','#c58b2a'];
+const AI_CHIPS=['soft pink studio, travertine stone','sunlit wooden table, leaf shadows','dark moody studio, blue rim light','summer picnic in a city park','minimal beige wall, morning light','cosy living room at golden hour','marble bathroom shelf, steam','vivid colour-block tiles, hard sun'];
+let pro=false,tab='feed',cur=null,slide=null,scale=1,selPh=null,logo=null,logoPos='tl',accent=null,fmt=FORMATS[0],hoverFmt=null,showSafe=false,packshot=null,bgMode='upload';
+const state={};
+const $=s=>document.querySelector(s);
+const grid=$('#grid'),holder=$('#holder'),stage=$('#stage'),overlay=$('#overlay');
+const tW=id=>+SLIDES[id].match(/data-canvas-width="(\d+)"/)[1];
+const tH=id=>+SLIDES[id].match(/data-canvas-height="(\d+)"/)[1];
+try{const k=localStorage.getItem('ype-key');if(k)setTimeout(()=>tryKey(k,true),0)}catch(e){}
+
+function build(id){
+  const t=document.createElement('template');t.innerHTML=SLIDES[id].trim();
+  const s=t.content.firstElementChild;
+  s.querySelectorAll('img.ph').forEach((img,i)=>{
+    const w=document.createElement('div');w.className='phwrap';w.setAttribute('style',img.getAttribute('style'));
+    img.parentNode.insertBefore(w,img);img.removeAttribute('style');img.className='';w.appendChild(img);
+  });
+  let n=0;
+  [...s.children].forEach(d=>{
+    if(d.classList.contains('phwrap'))return;
+    if(d.textContent.trim())d.dataset.t=n++;
+    else if(d.style.background&&d.style.borderRadius)d.dataset.btn=1;
+  });
+  return s;
+}
+/* ---------- layout engine: adapts any design to any format ---------- */
+function measure(s,id){
+  if(s._m)return;const W=tW(id),H=tH(id);
+  const tmp=document.createElement('div');tmp.style.cssText='position:fixed;left:-99999px;top:0;';
+  s.style.transform='none';tmp.appendChild(s);document.body.appendChild(tmp);
+  [...s.children].forEach(e=>{if(e.id==='overlay')return;const st=e.style;
+    e._o={l:parseFloat(st.left)||0,t:parseFloat(st.top)||0,w:parseFloat(st.width)||e.offsetWidth,h:parseFloat(st.height)||e.offsetHeight,hasH:!!st.height||e.classList.contains('phwrap'),txt:!!e.dataset.t};});
+  tmp.remove();s._m=true;s._W=W;s._H=H;
+}
+function layout(s,f){
+  const W=s._W,H=s._H,W2=f.w,H2=f.h,[st,sr,sb,sl]=f.safe;
+  const S={l:sl,t:st,r:W2-sr,b:H2-sb};S.w=S.r-S.l;S.h=S.b-S.t;
+  const M=72,Tw=W-2*M,eps=3;
+  const els=[...s.children].filter(e=>e._o);
+  els.forEach(e=>{const o=e._o;o.r=o.l+o.w;o.b=o.t+o.h;
+    o.hEdge=o.l<=eps||o.r>=W-eps; o.vEdge=o.t<=eps||o.b>=H-eps;
+    o.full=o.l<=eps&&o.r>=W-eps&&o.t<=eps&&o.b>=H-eps;
+    o.floatV=!o.vEdge; o.floatH=!o.hEdge||o.txt;});
+  // vertical groups among vertically floating elements
+  const fl=els.filter(e=>e._o.floatV).sort((a,b)=>a._o.t-b._o.t);
+  let split=-1,best=0;let maxB=-1;
+  for(let i=0;i<fl.length;i++){if(i>0){const gap=fl[i]._o.t-maxB;if(gap>best){best=gap;split=i}}maxB=Math.max(maxB,fl[i]._o.b)}
+  let top=[],bot=[];
+  if(fl.length){
+    if(best>H*0.12){top=fl.slice(0,split);bot=fl.slice(split)}
+    else{const a=Math.min(...fl.map(e=>e._o.t)),b=Math.max(...fl.map(e=>e._o.b));((a+b)/2<H/2?top:bot).push(...fl)}
+  }
+  const span=g=>g.length?[Math.min(...g.map(e=>e._o.t)),Math.max(...g.map(e=>e._o.b))]:null;
+  const ts=span(top),bs=span(bot);
+  const need=(ts?ts[1]-Math.min(M,ts[0]):0)+(bs?Math.max(H-M,bs[1])-bs[0]:0);
+  let k=Math.min(S.w/Tw,need?S.h/need:9,1,(W2/W)*1.15,(H2/H)*1.15);
+  const mapY=(e,y)=>top.includes(e)?S.t+(y-Math.min(M,ts[0]))*k:S.b-(Math.max(H-M,bs[1])-y)*k;
+  const place={};
+  els.forEach(e=>{const o=e._o;let L,T,w,h,sc=1;
+    if(o.full){L=0;T=0;w=W2;h=H2}
+    else{
+      // horizontal
+      if(o.txt&&o.l<=eps&&o.r>=W-eps){L=0;w=W2/k;sc=k}
+      else if(o.floatH){w=o.w;sc=k;L=(o.l+o.w/2>W*0.55&&o.l>W*0.4)?S.r-(W-M-o.l)*k:S.l+(o.l-M)*k}
+      else if(o.l<=eps&&o.r>=W-eps){L=0;w=W2}
+      else if(o.l<=eps){L=0;w=o.w*W2/W}
+      else{w=o.w*W2/W;L=W2-w}
+      // vertical
+      if(o.floatV){T=mapY(e,o.t);h=o.h}
+      else if(o.t<=eps&&o.b>=H-eps){T=0;h=H2}
+      else if(o.t<=eps){T=0;h=o.h*H2/H}
+      else{h=o.h*H2/H;T=H2-h}
+      if(sc!==1&&!o.floatH){/* box spanning width but floating vertically */h=o.h*k;sc=1}
+      if(o.floatV&&!o.floatH&&sc===1)h=o.h*k;
+    }
+    place[els.indexOf(e)]={L,T,w,h,sc};
+  });
+  // edge boxes must still contain the floating content they held in the design
+  els.forEach((e,i)=>{const o=e._o,p=place[i];if(o.full||o.floatV)return;
+    const inside=els.filter(x=>x!==e&&x._o.floatV&&x._o.t>=o.t-eps&&x._o.b<=o.b+eps&&x._o.l>=o.l-eps&&x._o.r<=o.r+eps);
+    inside.forEach(x=>{const px=place[els.indexOf(x)];const xt=px.T,xb=px.T+x._o.h*px.sc;
+      if(o.b>=H-eps&&o.t>eps){const need=xt-(x._o.t-o.t)*k;if(need<p.T){p.h+=p.T-need;p.T=need}}
+      if(o.t<=eps&&o.b<H-eps){const need=xb+(o.b-x._o.b)*k;if(need>p.T+p.h)p.h=need-p.T}
+    });
+  });
+  els.forEach((e,i)=>{const p=place[i];const st=e.style;
+    st.left=p.L+'px';st.top=p.T+'px';st.width=p.w+'px';
+    if(e._o.hasH)st.height=(p.sc===1?p.h:e._o.h)+'px';
+    st.transformOrigin='0 0';st.transform=p.sc!==1?`scale(${p.sc})`:'';e._sc=p.sc;
+  });
+  s.style.width=W2+'px';s.style.height=H2+'px';s._S=S;s._k=k;
+}
+/* ---------- UI ---------- */
+function renderFormats(){
+  const nav=$('#formats');nav.innerHTML='';
+  FORMATS.forEach(f=>{const b=document.createElement('button');b.className='fmt'+(f===fmt?' on':'');b.innerHTML=`${f.short} <small>${f.ratio}</small>`;b.title=f.name+': '+f.ui;
+    b.onmouseenter=()=>{hoverFmt=f;apply(f);drawOverlay(f,true)};
+    b.onmouseleave=()=>{hoverFmt=null;apply(fmt);drawOverlay(fmt,showSafe)};
+    b.onclick=()=>{fmt=f;hoverFmt=null;apply(fmt);renderFormats();drawOverlay(fmt,true);clearTimeout(b._t);b._t=setTimeout(()=>drawOverlay(fmt,showSafe),1400)};
+    nav.appendChild(b)});
+  const t=document.createElement('label');t.className='safe-toggle';t.innerHTML='<input type="checkbox" id="safeChk"> Show safe zone';nav.appendChild(t);
+  const c=t.querySelector('input');c.checked=showSafe;c.onchange=()=>{showSafe=c.checked;drawOverlay(fmt,showSafe)};
+}
+function drawOverlay(f,on){
+  overlay.innerHTML='';overlay.classList.toggle('on',!!on);if(!on)return;
+  const [t,r,b,l]=f.safe,k=scale,W=f.w*k,H=f.h*k;
+  const z=(x,y,w,h)=>{const d=document.createElement('div');d.className='zone';Object.assign(d.style,{left:x+'px',top:y+'px',width:w+'px',height:h+'px'});overlay.appendChild(d)};
+  z(0,0,W,t*k);z(0,H-b*k,W,b*k);z(0,t*k,l*k,H-(t+b)*k);z(W-r*k,t*k,r*k,H-(t+b)*k);
+  const s=document.createElement('div');s.className='safe';Object.assign(s.style,{left:l*k+'px',top:t*k+'px',width:(f.w-l-r)*k+'px',height:(f.h-t-b)*k+'px'});overlay.appendChild(s);
+  const tag=document.createElement('div');tag.className='tag';tag.textContent=`${f.name} safe zone`;Object.assign(tag.style,{left:l*k+6+'px',top:t*k+6+'px'});overlay.appendChild(tag);
+  const ui=document.createElement('div');ui.className='tag';ui.textContent=f.ui;Object.assign(ui.style,{left:'50%',bottom:Math.max(6,b*k/2-10)+'px',transform:'translateX(-50%)',whiteSpace:'normal',maxWidth:W-20+'px',textAlign:'center'});overlay.appendChild(ui);
+}
+function renderGrid(){
+  grid.innerHTML='';
+  Object.keys(SLIDES).filter(k=>tab==='feed'?k[0]==='F':k[0]==='S').forEach(id=>{
+    const b=document.createElement('button');b.className='thumb'+(id===cur?' on':'');
+    const w=tW(id),h=tH(id);b.style.aspectRatio=w+'/'+h;
+    const m=build(id);m.classList.add('mini');b.appendChild(m);
+    requestAnimationFrame(()=>{m.style.transform=`scale(${b.clientWidth/w})`});
+    const l=document.createElement('div');l.className='lbl';l.textContent=id+' '+NAMES[id];b.appendChild(l);
+    if(!pro&&!FREE.includes(id)){const k=document.createElement('div');k.className='lock';k.innerHTML='<span>Ad Kit</span>';b.appendChild(k)}
+    b.onclick=()=>{if(!pro&&!FREE.includes(id)){$('#modal').classList.add('on');return}open(id)};
+    grid.appendChild(b);
+  });
+}
+function open(id){
+  cur=id;slide=state[id]||(state[id]=build(id));selPh=null;
+  measure(slide,id);
+  holder.querySelectorAll('.slide').forEach(e=>e.remove());holder.insertBefore(slide,overlay);
+  slide.querySelectorAll('[data-t]').forEach(d=>{d.contentEditable=true;d.spellcheck=false});
+  bindSlide();apply(fmt);renderGrid();renderFields();renderPhotoPick();applyAccent();
+}
+function apply(f){
+  if(!slide)return;layout(slide,f);applyLogo(f);
+  const sw=stage.clientWidth-60,sh=stage.clientHeight-80;scale=Math.min(sw/f.w,sh/f.h);
+  holder.style.width=f.w*scale+'px';holder.style.height=f.h*scale+'px';slide.style.transform=`scale(${scale})`;
+  $('#zoomtag').textContent=`${f.name} · ${f.w} × ${f.h}`;
+  if(overlay.classList.contains('on'))drawOverlay(hoverFmt||fmt,true);
+}
+addEventListener('resize',()=>{apply(fmt);renderGrid()});
+
+function layerName(d){
+  const fs=parseFloat(d.style.fontSize)||0;const t=d.textContent.trim();
+  const prev=d.previousElementSibling;if(prev&&prev.dataset.btn)return 'Button';
+  if(fs>=90)return 'Headline';if(fs>=40)return 'Big text';if(/^[A-Z0-9 &.\-'\/!]+$/.test(t)&&t.length<16)return 'Label';return 'Text';
+}
+function renderFields(){
+  const f=$('#fields');f.innerHTML='';
+  slide.querySelectorAll('[data-t]').forEach(d=>{
+    const box=document.createElement('div');box.className='field';
+    box.innerHTML=`<label></label><div class="ed" contenteditable spellcheck="false"></div>`;
+    box.querySelector('label').textContent=layerName(d);
+    const ed=box.querySelector('.ed');ed.innerHTML=d.innerHTML;ed.dataset.for=d.dataset.t;
+    ed.oninput=()=>{d.innerHTML=ed.innerHTML};ed.onfocus=()=>select(d);
+    d.oninput=()=>{ed.innerHTML=d.innerHTML};
+    f.appendChild(box);
+  });
+}
+function select(el){
+  slide.querySelectorAll('.sel').forEach(e=>e.classList.remove('sel'));
+  if(el)el.classList.add('sel');
+  if(el&&el.classList.contains('phwrap')){selPh=el;$('#zoom').value=el._z||1;renderPhotoPick()}
+}
+function bindSlide(){
+  slide.querySelectorAll('[data-t]').forEach(d=>d.onfocus=()=>{select(d);const ed=document.querySelector(`.ed[data-for="${d.dataset.t}"]`);ed&&ed.scrollIntoView({block:'nearest',behavior:'smooth'})});
+  slide.querySelectorAll('.phwrap').forEach(w=>{
+    w._z=w._z||1;w._x=w._x||0;w._y=w._y||0;
+    w.onpointerdown=e=>{select(w);w.classList.add('drag');w.setPointerCapture(e.pointerId);const sx=e.clientX,sy=e.clientY,ox=w._x,oy=w._y,f=scale*(w._sc||1);
+      w.onpointermove=ev=>{w._x=ox+(ev.clientX-sx)/f;w._y=oy+(ev.clientY-sy)/f;tf(w)};
+      w.onpointerup=()=>{w.classList.remove('drag');w.onpointermove=null}};
+  });
+  if(!selPh)selPh=slide.querySelector('.phwrap');
+}
+function tf(w){w.querySelector('img').style.transform=`translate(${w._x}px,${w._y}px) scale(${w._z})`}
+$('#zoom').oninput=e=>{if(!selPh)return;selPh._z=+e.target.value;tf(selPh)};
+function renderPhotoPick(){
+  const p=$('#photoPick');p.innerHTML='';const all=slide.querySelectorAll('.phwrap');
+  if(all.length>1){all.forEach((w,i)=>{const b=document.createElement('button');b.className='btn small'+(w===selPh?' solid':'');b.textContent='Photo '+(i+1);b.onclick=()=>select(w);p.appendChild(b)});p.style.marginTop='8px'}
+}
+function setPhoto(url){const w=selPh||slide.querySelector('.phwrap');if(!w){info(t('noPhoto'),'err');return}
+  w.querySelector('img').src=url;w._x=w._y=0;w._z=1;$('#zoom').value=1;tf(w)}
+function readFile(file,cb){const r=new FileReader();r.onload=()=>cb(r.result);r.readAsDataURL(file)}
+function hookDrop(drop,input,cb){
+  drop.onclick=()=>input.click();input.onchange=()=>{input.files[0]&&readFile(input.files[0],cb);input.value=''};
+  drop.ondragover=e=>{e.preventDefault();drop.style.borderColor='var(--accent)'};drop.ondragleave=()=>drop.style.borderColor='';
+  drop.ondrop=e=>{e.preventDefault();drop.style.borderColor='';e.dataTransfer.files[0]&&readFile(e.dataTransfer.files[0],cb)};
+}
+hookDrop($('#photoDrop'),$('#photoFile'),setPhoto);
+stage.ondragover=e=>e.preventDefault();
+stage.ondrop=e=>{e.preventDefault();const f=e.dataTransfer.files[0];f&&readFile(f,setPhoto)};
+/* background modes */
+document.querySelectorAll('#bgSeg button').forEach(b=>b.onclick=()=>{bgMode=b.dataset.m;document.querySelectorAll('#bgSeg button').forEach(x=>x.classList.toggle('on',x===b));
+  $('#bgUpload').hidden=bgMode!=='upload';$('#bgAi').hidden=bgMode!=='ai';$('#bgProduct').hidden=bgMode!=='product';info('')});
+function chips(el,target){AI_CHIPS.forEach(c=>{const b=document.createElement('button');b.className='chip';b.textContent=c;b.onclick=()=>{$(target).value=c};$(el).appendChild(b)})}
+chips('#aiChips','#aiPrompt');chips('#packChips','#packPrompt');
+function info(msg,cls){const p=$('#aiInfo');p.className='hint'+(cls?' '+cls:'');p.innerHTML=msg}
+hookDrop($('#packDrop'),$('#packFile'),url=>{
+  const im=new Image();im.onload=()=>{const m=512,r=Math.min(1,m/Math.max(im.width,im.height));const c=document.createElement('canvas');c.width=Math.round(im.width*r);c.height=Math.round(im.height*r);c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+    c.toBlob(b=>{packshot=b;$('#packDrop').innerHTML=`<img src="${c.toDataURL()}"><b>${t('packReady')}</b>`},'image/png')};im.src=url});
+function genSize(){const f=fmt,r=f.w/f.h;let w,h;if(r>=1){w=1280;h=Math.round(1280/r/16)*16}else{h=1280;w=Math.round(1280*r/16)*16}return{w,h}}
+async function generate(withProduct){
+  if(!AI_URL||AI_URL.startsWith('__')){info(t('aiOff'),'err');return}
+  const prompt=(withProduct?$('#packPrompt'):$('#aiPrompt')).value.trim();
+  if(prompt.length<3){info(t('descFirst'),'err');return}
+  if(withProduct&&!packshot){info(t('packFirst'),'err');return}
+  const btn=withProduct?$('#packGo'):$('#aiGo');const label=btn.textContent;btn.disabled=true;btn.innerHTML='<span class="spin"></span>'+t(withProduct?'genProduct':'genBg');info('');
+  const fd=new FormData();fd.append('prompt',prompt);const s=genSize();fd.append('width',s.w);fd.append('height',s.h);if(withProduct)fd.append('packshot',packshot,'packshot.png');
+  try{
+    const r=await fetch(AI_URL+'/generate',{method:'POST',body:fd});
+    if(!r.ok){let m=t('wrong');try{const j=await r.json();m=r.status===429?t('limit'):(j.error||m)}catch(e){}throw new Error(m)}
+    const left=r.headers.get('X-Remaining');const blob=await r.blob();
+    readFile(blob,url=>{setPhoto(url)});
+    info(t('done',left));
+  }catch(e){info(e.message,'err')}
+  btn.disabled=false;btn.textContent=label;
+}
+$('#aiGo').onclick=()=>generate(false);$('#packGo').onclick=()=>generate(true);
+/* logo */
+hookDrop($('#logoDrop'),$('#logoFile'),url=>{logo={url,size:+$('#logoSize').value};$('#logoCtl').style.display='block';applyLogo(hoverFmt||fmt)});
+$('#logoSize').oninput=e=>{if(logo){logo.size=+e.target.value;applyLogo(hoverFmt||fmt)}};
+$('#logoPos').onclick=e=>{const p=e.target.dataset.p;if(p){logoPos=p;applyLogo(hoverFmt||fmt)}};
+$('#hideBrand').onchange=()=>applyLogo(hoverFmt||fmt);
+$('#logoRemove').onclick=()=>{logo=null;$('#logoCtl').style.display='none';applyLogo(hoverFmt||fmt)};
+function brandEl(s){return [...s.querySelectorAll('[data-t]')].find(d=>d._o&&d._o.t<=110&&parseFloat(d.style.letterSpacing)>=.1&&d.textContent.trim().length<14&&!/NEW|PROBLEM|LAST|DROPPED/i.test(d.textContent))}
+function applyLogo(f){
+  if(!slide)return;slide.querySelectorAll('.logo-layer').forEach(e=>e.remove());
+  const b=brandEl(slide);if(b)b.style.visibility=(logo&&$('#hideBrand').checked)?'hidden':'';
+  document.querySelectorAll('#logoPos button').forEach(x=>x.classList.toggle('on',x.dataset.p===logoPos));
+  if(!logo)return;const S=slide._S,sz=Math.min(logo.size,S.w*0.45);
+  const d=document.createElement('div');d.className='logo-layer';d.innerHTML=`<img src="${logo.url}">`;d.style.width=sz+'px';d.style.zIndex=5;
+  d.style.top='';d.style.bottom='';
+  if(logoPos[0]==='t')d.style.top=S.t+'px';else d.style.bottom=(f.h-S.b)+'px';
+  if(logoPos[1]==='l')d.style.left=S.l+'px';else if(logoPos[1]==='r')d.style.left=(S.r-sz)+'px';else d.style.left=(f.w-sz)/2+'px';
+  slide.appendChild(d);
+}
+/* accent */
+function renderSwatches(){const s=$('#swatches');s.innerHTML='';SWATCHES.forEach(c=>{const b=document.createElement('button');b.className='sw'+(c===accent?' on':'');b.title=c||'Original';b.style.background=c||'conic-gradient(#3b2722 0 25%,#e17145 0 50%,#2c3a5a 0 75%,#efe2db 0)';b.onclick=()=>{accent=c;applyAccent();renderSwatches()};s.appendChild(b)})}
+function applyAccent(){if(!slide)return;slide.querySelectorAll('[data-btn]').forEach(d=>{if(d._orig===undefined)d._orig=d.style.background;d.style.background=accent||d._orig})}
+/* export */
+async function exportPng(){
+  if(!slide)return;$('#busy').classList.add('on');select(null);overlay.classList.remove('on');
+  const f=fmt;apply(f);const long=Math.max(f.w,f.h),outScale=pro?1:720/long,outW=Math.round(f.w*outScale),outH=Math.round(f.h*outScale);
+  try{
+    const c=await htmlToImage.toCanvas(slide,{width:f.w,height:f.h,pixelRatio:outScale,style:{transform:'none',left:'0',top:'0'}});
+    const cv=document.createElement('canvas');cv.width=outW;cv.height=outH;const x=cv.getContext('2d');x.drawImage(c,0,0,outW,outH);
+    if(!pro)watermark(x,outW,outH);
+    const a=document.createElement('a');a.download=`ype-${cur}-${f.id}${pro?'':'-preview'}.png`;a.href=cv.toDataURL('image/png');a.click();
+  }catch(err){alert('Download failed: '+err.message)}
+  $('#busy').classList.remove('on');if(showSafe)drawOverlay(fmt,true);
+}
+function watermark(x,w,h){
+  const u=Math.min(w,h);x.save();x.translate(w/2,h/2);x.rotate(-Math.PI/6);x.font=`600 ${u*0.05}px "DM Sans",sans-serif`;x.fillStyle='rgba(255,255,255,.28)';x.strokeStyle='rgba(40,20,15,.18)';x.lineWidth=1;x.textAlign='center';
+  for(let r=-10;r<=10;r++)for(let c=-4;c<=4;c++){const tx=c*u*0.42+(r%2)*u*0.21,ty=r*u*0.13;x.fillText('ypemedia.com',tx,ty);x.strokeText('ypemedia.com',tx,ty)}
+  x.restore();const bh=u*0.05;x.fillStyle='rgba(84,47,40,.9)';x.fillRect(0,h-bh,w,bh);
+  x.fillStyle='#f5f1e9';x.font=`500 ${bh*0.42}px "DM Sans",sans-serif`;x.textAlign='center';x.textBaseline='middle';x.fillText('Made with YPE Media · get the full kit at ypemedia.com',w/2,h-bh/2);
+}
+$('#exportBtn').onclick=exportPng;
+/* licence */
+function setPro(v){pro=v;$('#plan').textContent=v?'Ad Kit unlocked':'Free';$('#plan').classList.toggle('pro',v);
+  $('#exportNote').innerHTML=v?'<b>Ad Kit:</b> full size, no watermark':'<b>Free:</b> 720 px, watermarked. Enter your Ad Kit key for full size without watermark';
+  $('#keyrow').style.display=v?'none':'flex';$('#unlockTop').style.display=v?'none':'';renderGrid()}
+async function tryKey(k,silent){
+  // TODO: validate against Polar licence keys via the Worker once products exist
+  if(k.trim().toUpperCase()==='DEMO'){setPro(true);try{localStorage.setItem('ype-key',k)}catch(e){}return}
+  if(!silent){$('#keyIn').value='';$('#keyIn').dataset.enplaceholder='Key not recognised';walk($('#keyIn'))}
+}
+$('#keyBtn').onclick=()=>tryKey($('#keyIn').value);
+$('#unlockTop').onclick=()=>$('#modal').classList.add('on');
+$('#closeModal').onclick=()=>$('#modal').classList.remove('on');
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('on'));b.classList.add('on');tab=b.dataset.tab;
+  const f=FORMATS.find(x=>x.id===(tab==='feed'?'ig-post':'ig-story'));if(f)fmt=f;renderFormats();open(tab==='feed'?'F01':'S02')});
+
+/* ---------- PL / EN ---------- */
+let lang='en';
+const MSG={
+ en:{noPhoto:'This design has no photo. Pick another design to use a background',aiOff:'AI generator is being switched on, try again soon',descFirst:'Describe the scene first',packFirst:'Upload your product photo first',genBg:'Generating, about 15 s',genProduct:'Creating your scene, up to a minute',wrong:'Something went wrong, please try again',limit:'You have used today\'s free AI images. Come back tomorrow',packReady:'Packshot ready · click to change',
+  done:n=>`Done.${n!==null?` <b>${n}</b> free AI images left today.`:''} Drag the ad to reposition`},
+ pl:{noPhoto:'Ten projekt nie ma zdjęcia. Wybierz inny projekt, żeby użyć tła',aiOff:'Generator AI właśnie się włącza, spróbuj za chwilę',descFirst:'Najpierw opisz scenę',packFirst:'Najpierw wgraj zdjęcie produktu',genBg:'Generuję, około 15 s',genProduct:'Tworzę scenę, do minuty',wrong:'Coś poszło nie tak, spróbuj ponownie',limit:'Dzisiejsze darmowe obrazki AI zostały wykorzystane. Wróć jutro',packReady:'Packshot gotowy · kliknij, żeby zmienić',
+  done:n=>`Gotowe.${n!==null?` Zostało <b>${n}</b> darmowych obrazków AI na dziś.`:''} Przeciągnij reklamę, żeby przesunąć kadr`}
+};
+function t(k,a){const v=(MSG[lang]||MSG.en)[k];return typeof v==='function'?v(a===undefined?null:a):v}
+const PL={
+ 'Free':'Darmowa wersja','Ad Kit unlocked':'Ad Kit odblokowany','Unlock all 18':'Odblokuj wszystkie 18',
+ 'Feed designs':'Projekty feed','Story designs':'Projekty Story',
+ '3 designs free. ':'3 projekty za darmo. ','15 more':'15 kolejnych',' with the Ad Kit':' w Ad Kicie',
+ "Every design works in every format: pick Instagram, TikTok or X at the top and the layout adapts to that platform's safe zone.":'Każdy projekt działa w każdym formacie: wybierz u góry Instagram, TikTok albo X, a układ sam dopasuje się do strefy bezpiecznej platformy.',
+ 'Free downloads are 720 px with a watermark. Ad Kit owners get full size files, no watermark, plus the Figma, Canva and After Effects sources.':'Darmowe pliki mają 720 px i znak wodny. Właściciele Ad Kitu pobierają pełny rozmiar bez znaku wodnego oraz pliki źródłowe Figma, Canva i After Effects.',
+ ' Show safe zone':' Pokaż strefę bezpieczną',
+ 'Background':'Tło','My photo':'Moje zdjęcie','Generate':'Generuj','My product':'Mój produkt',
+ 'Upload your photo':'Wgraj swoje zdjęcie','or drop it on the ad. Drag the ad to reposition':'albo upuść je na reklamę. Przeciągnij reklamę, żeby przesunąć kadr',
+ 'Describe the background':'Opisz tło','Generate background':'Wygeneruj tło',
+ 'Upload your packshot':'Wgraj packshot','product photo, ideally on a plain background':'zdjęcie produktu, najlepiej na jednolitym tle',
+ 'Where should it stand?':'Gdzie ma stać produkt?','Create ad scene':'Stwórz scenę reklamową','Zoom':'Przybliżenie',
+ 'Your logo':'Twoje logo','Upload logo':'Wgraj logo','PNG or SVG with transparent background':'PNG albo SVG z przezroczystym tłem',
+ 'Size':'Rozmiar','Position, always inside the safe zone':'Pozycja, zawsze w strefie bezpiecznej',
+ 'top left':'lewy górny','top':'góra','top right':'prawy górny','bottom left':'lewy dolny','bottom':'dół','bottom right':'prawy dolny',
+ ' Hide the sample brand name':' Ukryj przykładową nazwę marki','Remove logo':'Usuń logo',
+ 'Text ':'Tekst ','or click any text on the ad':'albo kliknij tekst na reklamie',
+ 'Accent colour':'Kolor akcentu','Changes buttons and highlights':'Zmienia przyciski i wyróżnienia',
+ 'Download PNG':'Pobierz PNG','Unlock':'Odblokuj',
+ 'Free:':'Darmowo:',' 720 px, watermarked. Enter your Ad Kit key for full size without watermark':' 720 px, ze znakiem wodnym. Wpisz klucz Ad Kit, żeby pobierać pełny rozmiar bez znaku wodnego',
+ ' full size, no watermark':' pełny rozmiar, bez znaku wodnego',
+ 'Unlock the ':'Odblokuj ','whole kit':'cały kit','This design is part of Ad Kit Vol. 1.':'Ten projekt jest częścią Ad Kit Vol. 1.',
+ 'All 18 designs in every social format':'Wszystkie 18 projektów w każdym formacie social media','Full size downloads, no watermark':'Pliki w pełnym rozmiarze, bez znaku wodnego',
+ 'Figma, Canva and After Effects files':'Pliki Figma, Canva i After Effects','Use for your brand and client work':'Do użytku dla Twojej marki i klientów',
+ 'Get Ad Kit, $29':'Kup Ad Kit, $29','Not now':'Nie teraz','Preparing your PNG…':'Przygotowuję PNG…',
+ 'Headline':'Nagłówek','Big text':'Duży tekst','Label':'Etykieta','Text':'Tekst','Button':'Przycisk',
+ 'Keep key content away from the edges. Profile grid shows a 3:4 crop':'Trzymaj ważne treści z dala od krawędzi. Siatka profilu pokazuje kadr 3:4',
+ 'Keep key content away from the edges':'Trzymaj ważne treści z dala od krawędzi',
+ 'Top: profile and progress bar. Bottom: reply bar and CTA':'Góra: profil i pasek postępu. Dół: pole odpowiedzi i CTA',
+ 'Right: like, comment, share. Bottom: caption and audio':'Prawo: polubienia, komentarze, udostępnianie. Dół: opis i dźwięk',
+ 'Top: profile. Bottom: reply bar and CTA':'Góra: profil. Dół: pole odpowiedzi i CTA',
+ 'Right: TikTok buttons. Bottom: caption, sound and CTA':'Prawo: przyciski TikToka. Dół: opis, dźwięk i CTA',
+ 'Right: Shorts buttons. Bottom: title and channel':'Prawo: przyciski Shorts. Dół: tytuł i kanał',
+ 'Timeline shows the full 16:9 image':'Oś czasu pokazuje cały obraz 16:9',
+ 'Warm travertine stone in soft morning light, pale pink wall':'np. warm travertine stone in soft morning light (po angielsku działa najlepiej)',
+ 'On a wet travertine stone, soft pink studio light, water droplets':'np. on a wet travertine stone, soft pink light (po angielsku działa najlepiej)',
+ 'Ad Kit licence key':'Klucz licencyjny Ad Kit','Key not recognised':'Nieznany klucz'
+};
+const PLRX=[[/^Photo (\d+)$/,'Zdjęcie $1'],[/^(.*) safe zone$/,'Strefa bezpieczna: $1'],[/^(.*): (.*)$/,null]];
+function trs(s){if(lang!=='pl'||!s)return s;if(PL[s]!==undefined)return PL[s];const m=s.match(/^(\s*)([\s\S]*?)(\s*)$/);if(PL[m[2]]!==undefined)return m[1]+PL[m[2]]+m[3];
+ for(const [rx,rep] of PLRX){if(rep&&rx.test(s))return s.replace(rx,rep)}
+ const c=s.indexOf(': ');if(c>0){const a=s.slice(0,c),b=s.slice(c+2);if(PL[b]!==undefined)return a+': '+PL[b]}
+ return s}
+function skip(n){const e=n.nodeType===1?n:n.parentElement;return !e||e.closest('.slide,script,style,.chips,#zoomtag,.thumb .lbl')}
+function walk(root){
+  if(skip(root))return;
+  const els=root.nodeType===1?[root,...root.querySelectorAll('[placeholder],[title]')]:[];
+  els.forEach(e=>{if(skip(e))return;['placeholder','title'].forEach(a=>{if(e.hasAttribute(a)){const k='en'+a;if(e.dataset[k]===undefined||(lang==='en'&&false))e.dataset[k]=e.getAttribute(a);e.setAttribute(a,lang==='pl'?trs(e.dataset[k]):e.dataset[k])}})});
+  const tw=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let n;
+  if(root.nodeType===3){n=root;if(n._en===undefined)n._en=n.nodeValue;n.nodeValue=lang==='pl'?trs(n._en):n._en;return}
+  while(n=tw.nextNode()){if(skip(n))continue;if(n._en===undefined)n._en=n.nodeValue;n.nodeValue=lang==='pl'?trs(n._en):n._en}
+}
+new MutationObserver(ms=>{if(lang!=='pl')return;ms.forEach(m=>m.addedNodes.forEach(x=>walk(x)))}).observe(document.body,{childList:true,subtree:true});
+function setLang(l){lang=l;document.documentElement.lang=l;document.querySelectorAll('#lang button').forEach(b=>b.classList.toggle('on',b.dataset.l===l));
+  try{localStorage.setItem('ype-lang',l)}catch(e){}walk(document.body);info('')}
+document.querySelectorAll('#lang button').forEach(b=>b.onclick=()=>setLang(b.dataset.l));
+renderSwatches();renderFormats();setPro(false);
+{let l='en';try{l=new URLSearchParams(location.search).get('lang')||localStorage.getItem('ype-lang')||((navigator.language||'').toLowerCase().startsWith('pl')?'pl':'en')}catch(e){}setLang(l==='pl'?'pl':'en')}
+document.fonts.ready.then(()=>open('F01'));
+</script>
+<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c79176b3686f4c7bb32ab7d432279fa0"}'></script>
+</body>
+</html>
