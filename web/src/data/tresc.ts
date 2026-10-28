@@ -2,7 +2,7 @@
 export const marka = {
   nazwa: "YPE Media",
   domena: "https://ypemedia.com",
-  email: "hello@ypemedia.com",
+  email: "info@ypemedia.com",
   opis: "Editable ad templates and AI prompt systems for e-commerce brands. Less guesswork, more good ads.",
   datePublished: "2026-10-26",
 };
@@ -72,7 +72,7 @@ export const stopka = {
     { etykieta: "Templates", href: "/#templates" },
     { etykieta: "Free editor", href: "/editor/" },
     { etykieta: "How it works", href: "/#how" },
-    { etykieta: "Say hello", href: "mailto:hello@ypemedia.com" },
+    { etykieta: "Contact", href: "mailto:info@ypemedia.com" },
   ],
   drobny: ["© 2026 YPE MEDIA", "LESS HYPE. MORE PROOF.", "MADE WITH FEELING"],
   prawne: [
