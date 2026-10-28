@@ -27,7 +27,7 @@ export const produkty: Produkt[] = [
       "After Effects project with animations",
       "Examples for 8 product categories",
     ],
-    link: "",
+    link: "https://buy.polar.sh/polar_cl_9ofk2oVshYsus6kVQ85apnF1iwl1Ov80Y66IP4AbTXN",
   },
   {
     sku: "ype-ai-ad-prompt-system",
@@ -42,7 +42,7 @@ export const produkty: Produkt[] = [
       "19-page PDF guide with examples",
       "CSV and JSON for Notion or Airtable",
     ],
-    link: "",
+    link: "https://buy.polar.sh/polar_cl_YBOKErzHkpcbiYBoKKq5S7egDm7NtFjmy7LQK2mSX5k",
   },
   {
     sku: "ype-ad-bundle",
@@ -57,7 +57,7 @@ export const produkty: Produkt[] = [
       "AI Ad Prompt System",
       "Free updates to both products",
     ],
-    link: "",
+    link: "https://buy.polar.sh/polar_cl_LrMFeHMA5PAtGFdXogduSJvLnnbp9O6kCCUS03YQMCH",
     wyroznienie: "Best value",
   },
 ];
