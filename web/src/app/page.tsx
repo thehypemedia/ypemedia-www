@@ -32,15 +32,37 @@ export default function Home() {
             <div className="eyebrow"><span className="eyebrow-line" /> {hero.eyebrow}</div>
             <h1>{hero.linia1}<br />{hero.linia2Prosto}<em>{hero.linia2Kursywa}</em></h1>
             <p className="studio-intro">{hero.intro[0]}<br />{hero.intro[1]}<br className="desktop-break" /> {hero.intro[2]}</p>
-            <a className="conversation" href="/editor/">
-              <span className="conversation-icon" aria-hidden="true">↗</span>
-              <div><span className="conversation-label">{hero.rozmowaEtykieta}</span><p>{hero.rozmowaTekst}</p></div>
-            </a>
+            <div className="hero-ctas">
+              <a className="cta-big" href="/editor/">Try the free editor <span aria-hidden="true">↗</span></a>
+              <a className="cta-ghost" href="#shop">See the Template Kit</a>
+            </div>
+            <p className="hero-note"><span aria-hidden="true" />Free in your browser · no sign up · AI backgrounds included</p>
           </div>
           <div className="studio-art">
             <Rzezba />
           </div>
         </div>
+      </section>
+
+
+      <section className="free-editor" id="editor" aria-labelledby="free-editor-title">
+        <div className="free-editor-copy">
+          <div className="eyebrow"><span className="eyebrow-line" /> FREE POST EDITOR, NO SIGN UP</div>
+          <h2 id="free-editor-title">Make your next post <em>right here,</em> for free</h2>
+          <p>Pick a design, drop in your product photo and logo, rewrite the copy and download. No account, no software, nothing to install.</p>
+          <ul>
+            <li><b>9 formats</b>Instagram, Facebook, TikTok, X and YouTube Shorts in one click</li>
+            <li><b>Safe zones</b>Text and buttons stay clear of each app&apos;s UI</li>
+            <li><b>AI backgrounds</b>Describe a scene or upload a packshot, 5 free images a day</li>
+            <li><b>3 designs free</b>The Template Kit unlocks all 18 in full size</li>
+          </ul>
+          <a className="cta-big cta-light" href="/editor/">Open the free editor <span aria-hidden="true">↗</span></a>
+        </div>
+        <a className="free-editor-shot" href="/editor/" aria-label="Open the free post editor">
+          <span className="shot-bar" aria-hidden="true"><i /><i /><i /><em>ypemedia.com/editor</em></span>
+          <img src="/editor-preview.webp" alt="YPE Media free post editor in the browser" width="1600" height="1000" loading="lazy" />
+          <span className="shot-badge">FREE</span>
+        </a>
       </section>
 
       <section className="section" id="shop">
