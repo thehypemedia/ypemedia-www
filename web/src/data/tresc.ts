@@ -70,6 +70,7 @@ export const stopka = {
   nawigacja: [
     { etykieta: "Shop", href: "/#shop" },
     { etykieta: "Templates", href: "/#templates" },
+    { etykieta: "Free editor", href: "/editor/" },
     { etykieta: "How it works", href: "/#how" },
     { etykieta: "Say hello", href: "mailto:hello@ypemedia.com" },
   ],
