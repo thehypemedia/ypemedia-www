@@ -3,24 +3,24 @@ export const marka = {
   nazwa: "YPE Media",
   domena: "https://ypemedia.com",
   email: "info@ypemedia.com",
-  opis: "Editable ad templates and AI prompt systems for e-commerce brands. Less guesswork, more good ads.",
+  opis: "Editable social media templates and AI product photo prompts for e-commerce brands. Less guesswork, better posts.",
   datePublished: "2026-10-26",
 };
 
 export const naglowek = {
   deskryptor: ["LESS HYPE.", "MORE PROOF."],
-  status: "AD KIT VOL. 1 IS OUT",
+  status: "TEMPLATE KIT VOL. 1 IS OUT",
 };
 
 export const hero = {
-  eyebrow: "AD TEMPLATES & AI PROMPTS FOR E-COMMERCE",
+  eyebrow: "SOCIAL TEMPLATES & AI PHOTO PROMPTS FOR E-COMMERCE",
   linia1: "Less guesswork.",
-  linia2Prosto: "More good ",
-  linia2Kursywa: "ads.",
-  intro: ["Templates and prompts for brands that ship ads weekly.", "Swap the photo, change the copy,", "and post something that works."],
-  rozmowaEtykieta: "READY WHEN YOU ARE",
-  rozmowaTekst: "See the templates",
-  podpisRzezby: "FIG. 01 / AN AD, TAKING SHAPE",
+  linia2Prosto: "Better ",
+  linia2Kursywa: "posts.",
+  intro: ["Templates and prompts for brands that post every week.", "Swap the photo, change the copy,", "and post something that works."],
+  rozmowaEtykieta: "TRY IT FREE",
+  rozmowaTekst: "Open the editor",
+  podpisRzezby: "FIG. 01 / A POST, TAKING SHAPE",
   przycisk: "Give it a spin",
   wskazowka: "a little play goes a long way",
 };
@@ -33,19 +33,19 @@ export const sekcje = {
     intro: "One-off purchase, instant download. Use them for your own brand and for client work.",
   },
   galeria: {
-    eyebrow: "AD KIT VOL. 1",
+    eyebrow: "TEMPLATE KIT VOL. 1",
     tytul: "Eighteen layouts that",
-    tytulKursywa: "actually run.",
-    intro: "Built on the formats that keep showing up in paid social: hero shots, offers, before and after, reviews, comparisons and launches.",
+    tytulKursywa: "actually work.",
+    intro: "Built on the formats that keep showing up in the best brand feeds: hero shots, offers, before and after, reviews, comparisons and launches.",
   },
   jak: {
     eyebrow: "HOW IT WORKS",
     tytul: "From blank canvas to",
     tytulKursywa: "posted.",
     kroki: [
-      { nr: "01", tytul: "Make the photo", tekst: "Run a prompt from the Prompt System with your product as the reference. Every prompt leaves space for text." },
-      { nr: "02", tytul: "Drop it in", tekst: "Open the template in Canva, CapCut, Figma, Adobe Express or After Effects and swap in your own photo." },
-      { nr: "03", tytul: "Post it", tekst: "Change the headline and colours, export a PNG and upload it to Meta, TikTok or Pinterest." },
+      { nr: "01", tytul: "Make the photo", tekst: "Run a prompt from the Prompt System with your product as the reference, or generate a scene in our editor. Every image leaves space for text." },
+      { nr: "02", tytul: "Drop it in", tekst: "Open the template in Figma, Canva, After Effects or the online editor and swap in your own photo and logo." },
+      { nr: "03", tytul: "Post it", tekst: "Change the headline and colours, pick Instagram, TikTok, Facebook, X or YouTube Shorts and export." },
     ],
   },
   faq: {
@@ -56,17 +56,18 @@ export const sekcje = {
 };
 
 export const faq = [
-  { q: "Which apps do the templates work in?", a: "Canva, CapCut, Figma, Adobe Express and After Effects. Use whichever you already have: Canva and CapCut suit most shop owners, Figma and After Effects suit designers and editors." },
+  { q: "Which apps do the templates work in?", a: "Figma, Canva and After Effects, plus our online editor that runs in the browser. Canva and the editor suit most shop owners, Figma and After Effects suit designers and editors." },
+  { q: "Can I try before I buy?", a: "Yes. Three designs are free in the online editor. Free downloads are 720 px with a watermark. The Template Kit unlocks all 18 designs, full size files and more AI backgrounds." },
   { q: "Which AI tools do the prompts work with?", a: "Higgsfield, GPT Image, Midjourney, Flux for photos, and Kling, Veo or Seedance for the motion prompts. Any text-to-image tool will do." },
   { q: "Can I use the templates for client work?", a: "Yes. You can use them for your own brand and for clients. You can't resell or share the template files themselves." },
-  { q: "Are the example photos included?", a: "They are placeholders that show the layout. Replace them with photos of your own product, or create matching ones with the Prompt System." },
-  { q: "How do I get the files after paying?", a: "Checkout runs through Polar. You get the download and links by email straight after payment." },
+  { q: "Are the example photos included?", a: "They are placeholders that show the layout. Replace them with photos of your own product, or create matching ones with the Prompt System or the editor." },
+  { q: "How do I get the files after paying?", a: "Checkout runs through Polar. You get the downloads, links and your editor licence key by email straight after payment." },
   { q: "Do you offer refunds?", a: "Digital files can't be returned once downloaded, but if something doesn't work as described, write to us and we will fix it or refund you." },
 ];
 
 export const stopka = {
   manifest: "Small studio.",
-  manifestKursywa: "Ads that ship.",
+  manifestKursywa: "Posts that ship.",
   nawigacja: [
     { etykieta: "Shop", href: "/#shop" },
     { etykieta: "Templates", href: "/#templates" },
