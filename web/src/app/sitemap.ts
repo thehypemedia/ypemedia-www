@@ -5,10 +5,10 @@ export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const teraz = new Date();
-  return ["/", "/terms/", "/privacy/"].map((p) => ({
+  return ["/", "/editor/", "/terms/", "/privacy/"].map((p) => ({
     url: `${marka.domena}${p}`,
     lastModified: teraz,
-    changeFrequency: p === "/" ? "weekly" : "yearly",
-    priority: p === "/" ? 1 : 0.3,
+    changeFrequency: p === "/" || p === "/editor/" ? "weekly" : "yearly",
+    priority: p === "/" ? 1 : p === "/editor/" ? 0.8 : 0.3,
   }));
 }
