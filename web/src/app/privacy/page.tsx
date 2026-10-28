@@ -18,7 +18,7 @@ export default function Strona() {
         <h2>Email</h2>
         <p>If you write to us, we keep your message only as long as we need it to help you.</p>
         <h2>Your rights</h2>
-        <p>You can ask us to see, correct or delete your data at <a href="mailto:hello@ypemedia.com">hello@ypemedia.com</a>.</p>
+        <p>You can ask us to see, correct or delete your data at <a href="mailto:info@ypemedia.com">info@ypemedia.com</a>.</p>
       </article>
       <Stopka />
     </main>
