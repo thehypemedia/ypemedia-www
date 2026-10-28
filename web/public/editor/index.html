@@ -511,7 +511,7 @@ const MSG={
  en:{noPhoto:'This design has no photo. Pick another design to use a background',aiOff:'AI generator is being switched on, try again soon',descFirst:'Describe the scene first',packFirst:'Upload your product photo first',genBg:'Generating, about 20 s',genProduct:'Creating your scene, up to a minute',wrong:'Something went wrong, please try again',limit:'You have used today\'s free AI images. Come back tomorrow',packReady:'Packshot ready · click to change',
   done:n=>`Done.${n!==null?` <b>${n}</b> free AI images left today.`:''} Drag the ad to reposition`},
  pl:{noPhoto:'Ten projekt nie ma zdjęcia. Wybierz inny projekt, żeby użyć tła',aiOff:'Generator AI właśnie się włącza, spróbuj za chwilę',descFirst:'Najpierw opisz scenę',packFirst:'Najpierw wgraj zdjęcie produktu',genBg:'Generuję, około 20 s',genProduct:'Tworzę scenę, do minuty',wrong:'Coś poszło nie tak, spróbuj ponownie',limit:'Dzisiejsze darmowe obrazki AI zostały wykorzystane. Wróć jutro',packReady:'Packshot gotowy · kliknij, żeby zmienić',
-  done:n=>`Gotowe.${n!==null?` Zostało <b>${n}</b> darmowych obrazków AI na dziś.`:''} Przeciągnij reklamę, żeby przesunąć kadr`}
+  done:n=>`Gotowe.${n!==null?` Darmowe obrazki AI na dziś: <b>${n}</b>.`:''} Przeciągnij reklamę, żeby przesunąć kadr`}
 };
 function t(k,a){const v=(MSG[lang]||MSG.en)[k];return typeof v==='function'?v(a===undefined?null:a):v}
 const PL={
