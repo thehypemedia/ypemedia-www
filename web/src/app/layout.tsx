@@ -4,13 +4,13 @@ import { marka } from "@/data/tresc";
 
 export const metadata: Metadata = {
   metadataBase: new URL(marka.domena),
-  title: { default: "YPE Media · Ad templates and AI prompts for e-commerce", template: "%s · YPE Media" },
+  title: { default: "YPE Media · Social media templates and AI photo prompts for e-commerce", template: "%s · YPE Media" },
   description: marka.opis,
   openGraph: {
     type: "website",
     siteName: marka.nazwa,
     url: "/",
-    title: "YPE Media · Less guesswork. More good ads.",
+    title: "YPE Media · Less guesswork. Better posts.",
     description: marka.opis,
     images: [{ url: "/og-image.png", width: 1200, height: 630 }],
   },
