@@ -17,8 +17,8 @@ export default function Stopka() {
           </nav>
           <div className="socials-new" aria-label="Social platforms">
             <span role="img" aria-label="Instagram"><img src="/instagram.svg" alt="" width="20" height="20" /></span>
-            <span role="img" aria-label="LinkedIn"><img src="/linkedin.svg" alt="" width="20" height="20" /></span>
-            <span role="img" aria-label="TikTok"><img src="/tiktok.svg" alt="" width="20" height="20" /></span>
+            <a href="https://www.linkedin.com/in/thehype-media-6aa5a2447/" target="_blank" rel="noopener" aria-label="YPE Media on LinkedIn"><img src="/linkedin.svg" alt="" width="20" height="20" /></a>
+            <a href="https://www.tiktok.com/@ypemedia" target="_blank" rel="noopener" aria-label="YPE Media on TikTok"><img src="/tiktok.svg" alt="" width="20" height="20" /></a>
           </div>
         </div>
         <div className="footer-fineprint">
