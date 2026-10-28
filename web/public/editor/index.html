@@ -431,7 +431,7 @@ function info(msg,cls){const p=$('#aiInfo');p.className='hint'+(cls?' '+cls:'');
 hookDrop($('#packDrop'),$('#packFile'),url=>{
   const im=new Image();im.onload=()=>{const m=512,r=Math.min(1,m/Math.max(im.width,im.height));const c=document.createElement('canvas');c.width=Math.round(im.width*r);c.height=Math.round(im.height*r);c.getContext('2d').drawImage(im,0,0,c.width,c.height);
     c.toBlob(b=>{packshot=b;$('#packDrop').innerHTML=`<img src="${c.toDataURL()}"><b>${t('packReady')}</b>`},'image/png')};im.src=url});
-function genSize(){const f=fmt,r=f.w/f.h;let w,h;if(r>=1){w=1280;h=Math.round(1280/r/16)*16}else{h=1280;w=Math.round(1280*r/16)*16}return{w,h}}
+function genSize(){const f=fmt,r=f.w/f.h,L=960;let w,h;if(r>=1){w=L;h=Math.round(L/r/16)*16}else{h=L;w=Math.round(L*r/16)*16}return{w,h}}
 async function generate(withProduct){
   if(!AI_URL||AI_URL.startsWith('__')){info(t('aiOff'),'err');return}
   const prompt=(withProduct?$('#packPrompt'):$('#aiPrompt')).value.trim();
@@ -440,12 +440,13 @@ async function generate(withProduct){
   const btn=withProduct?$('#packGo'):$('#aiGo');const label=btn.textContent;btn.disabled=true;btn.innerHTML='<span class="spin"></span>'+t(withProduct?'genProduct':'genBg');info('');
   const fd=new FormData();fd.append('prompt',prompt);const s=genSize();fd.append('width',s.w);fd.append('height',s.h);if(withProduct)fd.append('packshot',packshot,'packshot.png');
   try{
-    const r=await fetch(AI_URL+'/generate',{method:'POST',body:fd});
+    const ctl=new AbortController();const to=setTimeout(()=>ctl.abort(),120000);
+    const r=await fetch(AI_URL+'/generate',{method:'POST',body:fd,signal:ctl.signal});clearTimeout(to);
     if(!r.ok){let m=t('wrong');try{const j=await r.json();m=r.status===429?t('limit'):(j.error||m)}catch(e){}throw new Error(m)}
     const left=r.headers.get('X-Remaining');const blob=await r.blob();
     readFile(blob,url=>{setPhoto(url)});
     info(t('done',left));
-  }catch(e){info(e.message,'err')}
+  }catch(e){info(e.name==='AbortError'?t('wrong'):e.message,'err')}
   btn.disabled=false;btn.textContent=label;
 }
 $('#aiGo').onclick=()=>generate(false);$('#packGo').onclick=()=>generate(true);
@@ -507,9 +508,9 @@ document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.que
 /* ---------- PL / EN ---------- */
 let lang='en';
 const MSG={
- en:{noPhoto:'This design has no photo. Pick another design to use a background',aiOff:'AI generator is being switched on, try again soon',descFirst:'Describe the scene first',packFirst:'Upload your product photo first',genBg:'Generating, about 15 s',genProduct:'Creating your scene, up to a minute',wrong:'Something went wrong, please try again',limit:'You have used today\'s free AI images. Come back tomorrow',packReady:'Packshot ready · click to change',
+ en:{noPhoto:'This design has no photo. Pick another design to use a background',aiOff:'AI generator is being switched on, try again soon',descFirst:'Describe the scene first',packFirst:'Upload your product photo first',genBg:'Generating, about 20 s',genProduct:'Creating your scene, up to a minute',wrong:'Something went wrong, please try again',limit:'You have used today\'s free AI images. Come back tomorrow',packReady:'Packshot ready · click to change',
   done:n=>`Done.${n!==null?` <b>${n}</b> free AI images left today.`:''} Drag the ad to reposition`},
- pl:{noPhoto:'Ten projekt nie ma zdjęcia. Wybierz inny projekt, żeby użyć tła',aiOff:'Generator AI właśnie się włącza, spróbuj za chwilę',descFirst:'Najpierw opisz scenę',packFirst:'Najpierw wgraj zdjęcie produktu',genBg:'Generuję, około 15 s',genProduct:'Tworzę scenę, do minuty',wrong:'Coś poszło nie tak, spróbuj ponownie',limit:'Dzisiejsze darmowe obrazki AI zostały wykorzystane. Wróć jutro',packReady:'Packshot gotowy · kliknij, żeby zmienić',
+ pl:{noPhoto:'Ten projekt nie ma zdjęcia. Wybierz inny projekt, żeby użyć tła',aiOff:'Generator AI właśnie się włącza, spróbuj za chwilę',descFirst:'Najpierw opisz scenę',packFirst:'Najpierw wgraj zdjęcie produktu',genBg:'Generuję, około 20 s',genProduct:'Tworzę scenę, do minuty',wrong:'Coś poszło nie tak, spróbuj ponownie',limit:'Dzisiejsze darmowe obrazki AI zostały wykorzystane. Wróć jutro',packReady:'Packshot gotowy · kliknij, żeby zmienić',
   done:n=>`Gotowe.${n!==null?` Zostało <b>${n}</b> darmowych obrazków AI na dziś.`:''} Przeciągnij reklamę, żeby przesunąć kadr`}
 };
 function t(k,a){const v=(MSG[lang]||MSG.en)[k];return typeof v==='function'?v(a===undefined?null:a):v}
