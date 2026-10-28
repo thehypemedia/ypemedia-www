@@ -32,7 +32,7 @@ export default function Home() {
             <div className="eyebrow"><span className="eyebrow-line" /> {hero.eyebrow}</div>
             <h1>{hero.linia1}<br />{hero.linia2Prosto}<em>{hero.linia2Kursywa}</em></h1>
             <p className="studio-intro">{hero.intro[0]}<br />{hero.intro[1]}<br className="desktop-break" /> {hero.intro[2]}</p>
-            <a className="conversation" href="#templates">
+            <a className="conversation" href="/editor/">
               <span className="conversation-icon" aria-hidden="true">↗</span>
               <div><span className="conversation-label">{hero.rozmowaEtykieta}</span><p>{hero.rozmowaTekst}</p></div>
             </a>
@@ -70,7 +70,7 @@ export default function Home() {
         <div className="gallery gallery-feed">
           {szablony.filter((s) => s.id.startsWith("f")).map((s) => (
             <figure key={s.id}>
-              <img src={`/templates/${s.id}.webp`} alt={`${s.nazwa} ad template`} loading="lazy" width="720" height="900" />
+              <img src={`/templates/${s.id}.webp`} alt={`${s.nazwa} social media template`} loading="lazy" width="720" height="900" />
               <figcaption>{s.id.toUpperCase()} &nbsp;{s.nazwa}</figcaption>
             </figure>
           ))}
