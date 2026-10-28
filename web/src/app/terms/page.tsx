@@ -20,7 +20,7 @@ export default function Strona() {
         <h2>Refunds</h2>
         <p>Digital files cannot be returned once accessed. If a product does not work as described, contact us within 14 days and we will fix it or refund you.</p>
         <h2>Contact</h2>
-        <p><a href="mailto:hello@ypemedia.com">hello@ypemedia.com</a></p>
+        <p><a href="mailto:info@ypemedia.com">info@ypemedia.com</a></p>
       </article>
       <Stopka />
     </main>
