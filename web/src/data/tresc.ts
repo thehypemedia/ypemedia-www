@@ -110,9 +110,9 @@ export const freebie = {
     ["Every format", "LinkedIn, Instagram, Facebook, TikTok, X and YouTube Shorts with safe zones"],
     ["No strings", "No card, no trial. One email with the link, then one tip a week you can leave any time"],
   ],
-  // n8n webhook that receives {email, name, source} and sends the unlock e-mail. Empty = form shows the fallback note.
-  webhook: "", // e.g. https://TWOJ-N8N/webhook/ype-free-pack
+  // Google Apps Script web app (marketing/apps-script-free-pack.gs) that logs the lead and e-mails the unlock link. Empty = form shows the fallback note.
+  webhook: "", // Google Apps Script web app URL (…/exec), see marketing/apps-script-free-pack.gs
   linkOdblokowania: "https://ypemedia.com/editor/?unlock=creator-starter-7f3a",
-  dziekujemy: "Check your inbox. The unlock link is on its way, usually within a minute. Nothing there? Look in spam or write to info@ypemedia.com",
+  dziekujemy: "Done. Your link is below and a copy is on its way to your inbox. Open it once and the pack stays unlocked in this browser",
   fallback: "The form is taking a break. Write to info@ypemedia.com with the subject FREE PACK and we will send the link by hand",
 };

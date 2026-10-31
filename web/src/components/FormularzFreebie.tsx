@@ -19,8 +19,9 @@ export default function FormularzFreebie() {
     if (!dane.email) return;
     setStan("busy");
     try {
-      const r = await fetch(freebie.webhook, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(dane) });
-      if (!r.ok) throw new Error(String(r.status));
+      // Google Apps Script web app: no-cors + form body, the response is opaque, so a resolved fetch counts as sent.
+      const body = new URLSearchParams({ email: dane.email, name: dane.name, engaged: String(dane.engaged), source: dane.source, lang: dane.lang });
+      await fetch(freebie.webhook, { method: "POST", mode: "no-cors", body });
       setStan("ok");
       f.reset();
     } catch {
@@ -42,7 +43,12 @@ export default function FormularzFreebie() {
       ) : (
         <a className="cta-big cta-light" href="mailto:info@ypemedia.com?subject=FREE%20PACK">Email us for the link <span aria-hidden="true">↗</span></a>
       )}
-      {stan === "ok" && <p className="freebie-msg">{freebie.dziekujemy}</p>}
+      {stan === "ok" && (
+        <div className="freebie-done">
+          <p className="freebie-msg">{freebie.dziekujemy}</p>
+          <a className="cta-big" href={freebie.linkOdblokowania}>Open the editor, unlocked <span aria-hidden="true">↗</span></a>
+        </div>
+      )}
       {stan === "err" && <p className="freebie-msg err">{freebie.fallback}</p>}
       {!skonfigurowany && <p className="freebie-msg">{freebie.fallback}</p>}
       <p className="freebie-fine">By sending you agree to our <a href="/privacy/">privacy policy</a>. We never share your address.</p>

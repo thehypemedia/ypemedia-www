@@ -21,8 +21,8 @@ npm run build      # statyczna strona w web/out
 - `web/src/components/BloomSculpture.tsx`: rzeźba 3D (kod z Soft Spot)
 - `web/src/app/globals.css`: style; pierwsza część to CSS Soft Spot bez zmian, niżej dodatki YPE
 - `web/public/editor/index.html`: edytor online; projekty F (reklamy 4:5), S (stories 9:16) i C (creator: cytaty, statystyki, karuzele, social plates) siedzą w `<script id="slides">`
-- `web/src/app/free/`: strona freebie (Creator Starter Pack), formularz wysyła do webhooka n8n z `tresc.ts` → `freebie.webhook`
-- `marketing/`: workflow n8n do wysyłki freebie i playbook z tekstami postów
+- `web/src/app/free/`: strona freebie (Creator Starter Pack), formularz wysyła do Google Apps Script (adres w `tresc.ts` → `freebie.webhook`)
+- `marketing/`: skrypt Apps Script do darmowej wysyłki freebie i playbook z tekstami postów
 - `web/public/templates/`, `web/public/products/`: podglądy szablonów i okładki produktów
 - `llms.txt`, `ai/*.json`, `sitemap.xml`, dane strukturalne: generują się same z `src/data`, więc cena zmieniona w `handel.ts` zmienia się wszędzie
 

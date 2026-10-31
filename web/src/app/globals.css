@@ -130,6 +130,7 @@ a{color:inherit;text-decoration:none}
 .freebie-form button{width:100%;justify-content:center;cursor:pointer;border:0;font-family:inherit}
 .freebie-form button[disabled]{opacity:.6;cursor:wait}
 .freebie-msg{font-size:13px;line-height:1.6;color:#f5f1e9;margin:18px 0 0}.freebie-msg.err{color:#ef8a5e}
+.freebie-done .cta-big{margin-top:14px;background:#ef8a5e;color:#2e1d18}.freebie-done .cta-big:hover{background:#f5a07a}
 .freebie-fine{font-size:10px;letter-spacing:.3px;color:#8b7566;margin:14px 0 0}
 .freebie-gallery{padding:0 5.4vw 110px}
 @media(max-width:1100px){.freebie{grid-template-columns:1fr;gap:40px}}
