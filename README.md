@@ -1,6 +1,6 @@
 # ypemedia.com
 
-Sklep z produktami cyfrowymi YPE Media (Ad Kit Vol. 1, AI Ad Prompt System, The Ad Bundle). Wygląd przeniesiony 1:1 ze strony Soft Spot z Manusa: te same kolory, fonty (DM Sans, Instrument Serif) i ta sama rzeźba 3D w Three.js.
+Sklep z produktami cyfrowymi YPE Media (Social Template Kit Vol. 1 z 34 projektami, Product Photo Prompt System, The Creator Bundle) plus darmowy edytor online i freebie Creator Starter Pack. Wygląd przeniesiony 1:1 ze strony Soft Spot z Manusa: te same kolory, fonty (DM Sans, Instrument Serif) i ta sama rzeźba 3D w Three.js.
 
 Układ jak auto-mate.space: statyczny Next.js, każdy push na `main` buduje stronę i wysyła ją po FTP na Hostingera.
 
@@ -20,6 +20,9 @@ npm run build      # statyczna strona w web/out
 - `web/src/app/`: strony (`page.tsx` to strona główna, `terms`, `privacy`, `thank-you`)
 - `web/src/components/BloomSculpture.tsx`: rzeźba 3D (kod z Soft Spot)
 - `web/src/app/globals.css`: style; pierwsza część to CSS Soft Spot bez zmian, niżej dodatki YPE
+- `web/public/editor/index.html`: edytor online; projekty F (reklamy 4:5), S (stories 9:16) i C (creator: cytaty, statystyki, karuzele, social plates) siedzą w `<script id="slides">`
+- `web/src/app/free/`: strona freebie (Creator Starter Pack), formularz wysyła do webhooka n8n z `tresc.ts` → `freebie.webhook`
+- `marketing/`: workflow n8n do wysyłki freebie i playbook z tekstami postów
 - `web/public/templates/`, `web/public/products/`: podglądy szablonów i okładki produktów
 - `llms.txt`, `ai/*.json`, `sitemap.xml`, dane strukturalne: generują się same z `src/data`, więc cena zmieniona w `handel.ts` zmienia się wszędzie
 

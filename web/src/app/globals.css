@@ -107,3 +107,30 @@ a{color:inherit;text-decoration:none}
 @media(min-width:1600px){.hero-note{font-size:13px}.cta-big{font-size:17px}.free-editor li{font-size:15px}}
 @media(max-width:1100px){.free-editor{grid-template-columns:1fr;padding:90px 5vw}.free-editor-copy>p,.free-editor ul{max-width:640px}}
 @media(max-width:760px){.hero-ctas{margin-top:28px;gap:10px}.cta-big,.cta-ghost{min-height:50px;padding:12px 22px;font-size:14px}.cta-big{width:100%;justify-content:center}.cta-ghost{width:100%;justify-content:center}.hero-note{font-size:10px}.top-cta{padding:7px 10px}.top-cta b{display:none}.free-editor{padding:70px 25px;gap:44px}.free-editor h2{font-size:clamp(42px,11vw,62px);letter-spacing:-1.6px}.free-editor li{grid-template-columns:1fr;gap:4px}.shot-badge{right:12px;bottom:12px;font-size:9px;padding:7px 12px}}
+
+/* ===== Creator gallery + free pack ===== */
+.gallery figure.is-free img{outline:2px solid var(--accent);outline-offset:-2px}
+.free-tag{margin-left:8px;color:var(--accent)}
+.gallery-note{font-size:13px;color:#8b7566;margin:-30px 0 56px}.gallery-note a{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+.freebie{display:grid;grid-template-columns:1.05fr .95fr;gap:5vw;align-items:start;padding:50px 5.4vw 110px}
+.freebie h1{white-space:normal;margin:0 0 26px;font-size:clamp(52px,6vw,96px)}
+.freebie-intro{font-size:15px;line-height:1.75;color:#6e5649;max-width:520px;margin:0 0 36px}
+.freebie ul{list-style:none;padding:0;margin:0;max-width:520px}
+.freebie li{display:grid;grid-template-columns:130px 1fr;gap:16px;padding:14px 0;border-top:1px solid var(--line);font-size:13px;line-height:1.55;color:#6e5649}
+.freebie li:last-child{border-bottom:1px solid var(--line)}
+.freebie li b{font-weight:400;color:var(--ink);font-size:11px;letter-spacing:1.2px;text-transform:uppercase;padding-top:2px}
+.freebie-form{background:#2e1d18;color:#f5f1e9;padding:44px 40px 40px;border-radius:12px;box-shadow:0 50px 90px -40px rgba(0,0,0,.6)}
+.freebie-form h2{font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:36px;letter-spacing:-1px;line-height:1;margin:0 0 8px}.freebie-form h2 em{color:#ef8a5e}
+.freebie-form>p{font-size:13px;color:#cdbcae;margin:0 0 26px;line-height:1.6}
+.freebie-form label{display:block;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:#cba48d;margin:0 0 8px}
+.freebie-form input[type=text],.freebie-form input[type=email]{width:100%;background:#3b2722;border:1px solid #5a3f36;color:#f5f1e9;font:inherit;font-size:15px;padding:14px 16px;border-radius:8px;margin-bottom:18px;outline:none}
+.freebie-form input:focus{border-color:#ef8a5e}
+.freebie-form .check{display:flex;gap:10px;align-items:flex-start;font-size:12px;line-height:1.5;color:#cdbcae;margin:4px 0 24px;text-transform:none;letter-spacing:0}
+.freebie-form .check input{margin-top:3px;accent-color:#ef8a5e}
+.freebie-form button{width:100%;justify-content:center;cursor:pointer;border:0;font-family:inherit}
+.freebie-form button[disabled]{opacity:.6;cursor:wait}
+.freebie-msg{font-size:13px;line-height:1.6;color:#f5f1e9;margin:18px 0 0}.freebie-msg.err{color:#ef8a5e}
+.freebie-fine{font-size:10px;letter-spacing:.3px;color:#8b7566;margin:14px 0 0}
+.freebie-gallery{padding:0 5.4vw 110px}
+@media(max-width:1100px){.freebie{grid-template-columns:1fr;gap:40px}}
+@media(max-width:760px){.freebie{padding:30px 25px 80px}.freebie-form{padding:30px 22px}.freebie-gallery{padding:0 25px 80px}}

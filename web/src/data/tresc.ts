@@ -34,9 +34,9 @@ export const sekcje = {
   },
   galeria: {
     eyebrow: "TEMPLATE KIT VOL. 1",
-    tytul: "Eighteen layouts that",
+    tytul: "Thirty-four layouts that",
     tytulKursywa: "actually work.",
-    intro: "Built on the formats that keep showing up in the best brand feeds: hero shots, offers, before and after, reviews, comparisons and launches.",
+    intro: "Product ads built on the formats that keep showing up in the best brand feeds, plus a creator set: quote cards, stat posts, carousel slides and socials plates for LinkedIn and Instagram.",
   },
   jak: {
     eyebrow: "HOW IT WORKS",
@@ -57,7 +57,9 @@ export const sekcje = {
 
 export const faq = [
   { q: "Which apps do the templates work in?", a: "Figma, Canva and After Effects, plus our online editor that runs in the browser. Canva and the editor suit most shop owners, Figma and After Effects suit designers and editors." },
-  { q: "Can I try before I buy?", a: "Yes. Three designs are free in the online editor. Free downloads are 720 px with a watermark. The Template Kit unlocks all 18 designs, full size files and more AI backgrounds." },
+  { q: "Can I try before I buy?", a: "Yes. Five designs are free in the online editor, and the free Creator Starter Pack unlocks six creator designs in full size. Free downloads are 720 px with a watermark. The Template Kit unlocks all 34 designs, full size files and more AI backgrounds." },
+  { q: "What is the Creator Starter Pack?", a: "Six creator designs from the kit, free and in full size: a quote card, a stat post, a socials plate, a carousel cover, a carousel ending and a text hook. Leave your email on the free pack page and the unlock link arrives in a minute." },
+  { q: "Do the templates work for LinkedIn carousels?", a: "Yes. The creator designs are 4:5, the same size LinkedIn uses for image posts. Export each slide as PNG, drop them into one PDF and post it as a document. The Figma file has the carousel pages ready to export as PDF." },
   { q: "Which AI tools do the prompts work with?", a: "Higgsfield, GPT Image, Midjourney, Flux for photos, and Kling, Veo or Seedance for the motion prompts. Any text-to-image tool will do." },
   { q: "Can I use the templates for client work?", a: "Yes. You can use them for your own brand and for clients. You can't resell or share the template files themselves." },
   { q: "Are the example photos included?", a: "They are placeholders that show the layout. Replace them with photos of your own product, or create matching ones with the Prompt System or the editor." },
@@ -72,6 +74,7 @@ export const stopka = {
     { etykieta: "Shop", href: "/#shop" },
     { etykieta: "Templates", href: "/#templates" },
     { etykieta: "Free editor", href: "/editor/" },
+    { etykieta: "Free pack", href: "/free/" },
     { etykieta: "How it works", href: "/#how" },
     { etykieta: "Contact", href: "mailto:info@ypemedia.com" },
   ],
@@ -89,4 +92,27 @@ export const szablony = [
   { id: "f10", nazwa: "Bundle" }, { id: "f11", nazwa: "New Launch" }, { id: "f12", nazwa: "Social Proof" },
   { id: "s01", nazwa: "UGC Caption" }, { id: "s02", nazwa: "Story Offer" }, { id: "s03", nazwa: "Story Benefits" },
   { id: "s04", nazwa: "Editorial" }, { id: "s05", nazwa: "Last Chance" }, { id: "s06", nazwa: "Hook Question" },
+  { id: "c01", nazwa: "Quote Editorial", darmowy: true }, { id: "c02", nazwa: "Quote Bold" }, { id: "c03", nazwa: "Quote Portrait" }, { id: "c04", nazwa: "Quote Card" },
+  { id: "c05", nazwa: "Big Number", darmowy: true }, { id: "c06", nazwa: "Three Stats" }, { id: "c07", nazwa: "Bar Chart" }, { id: "c08", nazwa: "Before vs Now" },
+  { id: "c09", nazwa: "Find Me On", darmowy: true }, { id: "c10", nazwa: "Now On Platform" }, { id: "c11", nazwa: "Contact Card" },
+  { id: "c12", nazwa: "Carousel Cover", darmowy: true }, { id: "c13", nazwa: "Carousel List" }, { id: "c14", nazwa: "Carousel Tip" }, { id: "c15", nazwa: "Carousel CTA", darmowy: true },
+  { id: "c16", nazwa: "Text Hook", darmowy: true },
 ];
+
+// Free Creator Starter Pack: the /free page and the e-mail that delivers the unlock link.
+export const freebie = {
+  eyebrow: "FREE CREATOR STARTER PACK",
+  tytul: "Six creator designs,",
+  tytulKursywa: "on the house.",
+  intro: "A quote card, a stat post, a socials plate, a carousel cover and ending, and a text hook. Full size, no watermark, in the online editor. Leave your email and the unlock link lands in your inbox.",
+  punkty: [
+    ["6 designs", "Quote, big number, find me on, carousel cover, carousel CTA, text hook"],
+    ["Every format", "LinkedIn, Instagram, Facebook, TikTok, X and YouTube Shorts with safe zones"],
+    ["No strings", "No card, no trial. One email with the link, then one tip a week you can leave any time"],
+  ],
+  // n8n webhook that receives {email, name, source} and sends the unlock e-mail. Empty = form shows the fallback note.
+  webhook: "", // e.g. https://TWOJ-N8N/webhook/ype-free-pack
+  linkOdblokowania: "https://ypemedia.com/editor/?unlock=creator-starter-7f3a",
+  dziekujemy: "Check your inbox. The unlock link is on its way, usually within a minute. Nothing there? Look in spam or write to info@ypemedia.com",
+  fallback: "The form is taking a break. Write to info@ypemedia.com with the subject FREE PACK and we will send the link by hand",
+};

@@ -54,7 +54,7 @@ export default function Home() {
             <li><b>9 formats</b>Instagram, Facebook, TikTok, X and YouTube Shorts in one click</li>
             <li><b>Safe zones</b>Text and buttons stay clear of each app&apos;s UI</li>
             <li><b>AI backgrounds</b>Describe a scene or upload a packshot, 5 free images a day</li>
-            <li><b>3 designs free</b>The Template Kit unlocks all 18 in full size</li>
+            <li><b>5 designs free</b>Plus six creator designs in full size with the <a href="/free/">free pack</a>. The Template Kit unlocks all 34</li>
           </ul>
           <a className="cta-big cta-light" href="/editor/">Open the free editor <span aria-hidden="true">↗</span></a>
         </div>
@@ -97,6 +97,16 @@ export default function Home() {
             </figure>
           ))}
         </div>
+        <div className="gallery-label">CREATOR 4:5 · QUOTES, STATS, CAROUSELS, SOCIALS</div>
+        <div className="gallery gallery-feed">
+          {szablony.filter((s) => s.id.startsWith("c")).map((s) => (
+            <figure key={s.id} className={s.darmowy ? "is-free" : undefined}>
+              <img src={`/templates/${s.id}.webp`} alt={`${s.nazwa} creator template for LinkedIn and Instagram`} loading="lazy" width="720" height="900" />
+              <figcaption>{s.id.toUpperCase()} &nbsp;{s.nazwa}{s.darmowy && <span className="free-tag">FREE PACK</span>}</figcaption>
+            </figure>
+          ))}
+        </div>
+        <p className="gallery-note">Six of the creator designs are free in full size. <a href="/free/">Get the Creator Starter Pack</a></p>
         <div className="gallery-label">STORIES & REELS 9:16</div>
         <div className="gallery gallery-stories">
           {szablony.filter((s) => s.id.startsWith("s")).map((s) => (

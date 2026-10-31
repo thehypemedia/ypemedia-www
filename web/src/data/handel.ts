@@ -16,12 +16,13 @@ export const produkty: Produkt[] = [
   {
     sku: "ype-social-template-kit-vol-1",
     nazwa: "Social Template Kit Vol. 1",
-    krotko: "18 editable templates for Instagram, Facebook, TikTok, X and YouTube Shorts.",
+    krotko: "34 editable templates for Instagram, LinkedIn, Facebook, TikTok, X and YouTube Shorts.",
     cena: 29,
     waluta: "USD",
     okladka: "/products/cover-template-kit.webp",
     zawartosc: [
-      "12 feed templates (4:5) and 6 story templates (9:16)",
+      "12 product ad templates (4:5) and 6 story templates (9:16)",
+      "16 creator templates: quotes, stats, carousel slides, socials plates",
       "Figma file and Canva templates",
       "After Effects project with animations",
       "Full access to the online editor, no watermark",
