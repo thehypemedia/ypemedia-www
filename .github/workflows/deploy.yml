@@ -5,12 +5,12 @@ on:
     branches: [main]
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 concurrency:
   group: deploy
   cancel-in-progress: true
+
+permissions:
+  contents: write
 
 jobs:
   deploy:
