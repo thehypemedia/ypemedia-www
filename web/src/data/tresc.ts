@@ -111,7 +111,7 @@ export const freebie = {
     ["No strings", "No card, no trial. One email with the link, then one tip a week you can leave any time"],
   ],
   // Google Apps Script web app (marketing/apps-script-free-pack.gs) that logs the lead and e-mails the unlock link. Empty = form shows the fallback note.
-  webhook: "", // Google Apps Script web app URL (…/exec), see marketing/apps-script-free-pack.gs
+  webhook: "https://script.google.com/macros/s/AKfycbwAGXIe-ZVb7XFrDABj7TKCRaJpn63m7c9esqWokKPQAhqCNW2kpwnDYlzuvj_X8a6VWA/exec", // Google Apps Script web app URL (…/exec), see marketing/apps-script-free-pack.gs
   linkOdblokowania: "https://ypemedia.com/editor/?unlock=creator-starter-7f3a",
   dziekujemy: "Done. Your link is below and a copy is on its way to your inbox. Open it once and the pack stays unlocked in this browser",
   fallback: "The form is taking a break. Write to info@ypemedia.com with the subject FREE PACK and we will send the link by hand",
